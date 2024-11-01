@@ -21,9 +21,9 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Invalid email format' });
     }
 
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#^])[A-Za-z\d@$!%*?&.#^]{8,}$/;
+    const passwordRegex = /^.{8,}$/; // At least 8 characters
     if (!passwordRegex.test(password)) {
-      return res.status(400).json({ message: 'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character' });
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
     }
 
     // Verificar si el usuario o el correo ya existen en la base de datos
@@ -57,37 +57,40 @@ const register = async (req, res) => {
 
 const createLogin = async (req, res) => {
   try {
-      const { username, password } = req.body;
-      console.log(username, password);
-      
-      // Busca el usuario en la base de datos por el email
-      const user = await User.findOne({ username });
-      console.log(user);
-      
-      if (user) {
-          // Compara la contraseña de forma simple (sin hashear)
-          if (password === user.password_user) {
-              // Iniciar sesión y almacenar información en la sesión
-              req.session.isLoggedIn = true;
-              req.session.username = user.email_user;
-              
-              const sessionId = req.session.id;
-              const personId = user._id;
-              console.log(`All good and your sessionId is ${sessionId}`);
-              
-              res.status(200).json({
-                  success: true,
-                  message: "Login successful",
-                  personId,
-              });
-              return;
-          }
+    const { identifier, password } = req.body; // Use 'identifier' to accept either username or email
+    console.log(identifier, password);
+
+    // Find the user by username or email
+    const user = await User.findOne({
+      $or: [{ username: identifier }, { email_user: identifier }],
+    });
+    console.log(user);
+
+    if (user) {
+      // Compare the password (assuming it's not hashed)
+      if (password === user.password_user) {
+        // Log in and store information in the session
+        req.session.isLoggedIn = true;
+        req.session.username = user.email_user;
+
+        const sessionId = req.session.id;
+        const personId = user._id;
+        console.log(`All good and your sessionId is ${sessionId}`);
+
+        res.status(200).json({
+          success: true,
+          message: "Login successful",
+          personId,
+        });
+        return;
       }
-      res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+    res.status(401).json({ success: false, message: "Invalid credentials" });
   } catch (err) {
-      console.error('Error creating login:', err);
-      res.status(500).json({ success: false, message: "Server error" });
-  }}
+    console.error('Error creating login:', err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 
 

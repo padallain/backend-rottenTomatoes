@@ -10,6 +10,7 @@ const app = express();
 
 app.use(cors());
 app.use(morgan("dev"));
+app.use(express.json()); // Ensure this line is present to parse JSON request bodies
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
@@ -23,7 +24,6 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-app.use(express.json());
 app.use("/", startRoutes);
 
 connectToDatabase()
