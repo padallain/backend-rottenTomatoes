@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
+const { DB_URI } = require('./config');
 
 const connectToDatabase = async () => {
     try {
-        // Conectar a MongoDB con la misma URI para local y producción
-        await mongoose.connect(process.env.DB_URI, {
+        await mongoose.connect(DB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 5000, // Tiempo de espera de 5 segundos
+            serverSelectionTimeoutMS: 5000,
         });
-        console.log('Conectado a MongoDB');
+        console.log('Connected to MongoDB');
     } catch (err) {
-        console.error('Error conectando a MongoDB:', err);
+        console.error('Error connecting to MongoDB:', err);
     }
 };
 
