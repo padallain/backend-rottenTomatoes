@@ -1,4 +1,4 @@
-const Category = require('../models/category.model'); // Assuming you have a Category model
+const Category = require('../models/review.model'); // Assuming you have a Category model
 
 class CategoryController {
   // Create a new category

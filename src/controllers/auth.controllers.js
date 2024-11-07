@@ -144,7 +144,7 @@ const resetPassword = async (req, res) => {
       from: 'tuemail@gmail.com', // Tu correo
       to: email_user,            // Correo del destinatario
       subject: 'Restablecimiento de contraseña',
-      text: `Tu código de restablecimiento de contraseña es: ${resetCode}. Este código es válido por 10 minutos.`
+      text: `Hola ${user.username},\n\nTu código de restablecimiento de contraseña es: ${resetCode}. Este código es válido por 10 minutos.\n\nSaludos,\nTu equipo`
     };
 
     // Enviar el correo con el token
