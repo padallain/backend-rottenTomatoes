@@ -1,7 +1,7 @@
 const express = require('express');
 const { register, createLogin, resetPassword, checkResetToken,savePassword, eraseAccount } = require('../controllers/auth.controllers');
 const router = express.Router();
-const Notes = require('../controllers/movie.controllers'); 
+const Movie = require('../controllers/movie.controllers'); 
 const categoryController = require('../controllers/review.controllers');
 
 router.use(express.json()); 
@@ -17,8 +17,8 @@ router.post('/checkReset', checkResetToken);
 router.post('/newPassword', savePassword);
 router.delete('/deleteUser', eraseAccount)
 
-// Notes routes
-router.get('/getNotes/:userId', Notes.getNotes.bind(Notes)); // Get notes for a specific user
+// movie routes
+router.get('/tredingMovies', Movie.getTrendingMovies.bind(Movie)); 
 router.get('/getOneNote/:noteId', Notes.getOneNote.bind(Notes)); // Get a single note by ID
 router.post('/createNote', Notes.createNote.bind(Notes)); // Create a new note
 router.put('/updateNote/:noteId', Notes.updateNote.bind(Notes)); // Update a note by ID
