@@ -1,8 +1,8 @@
 const express = require('express');
 const { register, createLogin, resetPassword, checkResetToken,savePassword, eraseAccount } = require('../controllers/auth.controllers');
 const router = express.Router();
-const Notes = require('../controllers/notes.controllers'); 
-const categoryController = require('../controllers/category.controllers');
+const Notes = require('../controllers/movie.controllers'); 
+const categoryController = require('../controllers/review.controllers');
 
 router.use(express.json()); 
 
