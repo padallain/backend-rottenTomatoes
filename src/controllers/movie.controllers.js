@@ -60,9 +60,34 @@ class Movies {
   }
 
   // Get a single movie by ID
-  async getOneMovie(req, res) {
-    res.send('Get one movie');
+  async saveOurMovies(req, res) {
+    const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
+
+    try {
+      const user = await User.findById(userId).populate('lastSeenMovies');
+      const movie = await Movie.findById(movieId);
+
+      if (!user || !movie) {
+        return res.status(404).json({ message: 'User or Movie not found' });
+      }
+
+      // Add the movie to the user's last seen movies
+      user.lastSeenMovies.push(movie);
+
+      // Ensure the array does not exceed 15 movies
+      if (user.lastSeenMovies.length > 15) {
+        user.lastSeenMovies.shift(); // Remove the oldest movie
+      }
+
+      await user.save();
+
+      res.status(200).json({ message: 'Movie added to last seen movies', lastSeenMovies: user.lastSeenMovies });
+    } catch (error) {
+      console.error("Error adding movie to last seen movies:", error);
+      res.status(500).json({ message: "Error adding movie to last seen movies", error: error.message });
+    }
   }
+
 
   // Get trending movies
   async getTrendingMovies(req, res) {
