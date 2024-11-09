@@ -25,4 +25,5 @@ const userSchema = new mongoose.Schema({
 
 // El método pre-guardado, si es necesario, para generar el token puede añadirse aquí
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+export default User;
