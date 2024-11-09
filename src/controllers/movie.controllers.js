@@ -4,9 +4,9 @@ import Movie from '../models/movie.model.js';
 class Movies {
   // Create a new movie
   async createMovie(req, res) {
-        const movieId = req.body // Assuming movieId is passed as a URL parameter
-        const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
-        const castUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`;
+    const { movieId } = req.body; // Assuming movieId is passed in the request body
+    const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
+    const castUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`;
     const options = {
       method: 'GET',
       headers: {
@@ -25,14 +25,15 @@ class Movies {
       const castData = await castResponse.json();
 
       // Map cast information
-      const cast = castData.cast.map(member => ({
+      const cast = castData.cast ? castData.cast.map(member => ({
         name: member.name,
         role: member.character,
         profile_path: member.profile_path,
         character: member.character,
-      }));
+      })) : [];
 
       const newMovie = new Movie({
+        movieId: movieData.id, // Add movieId here
         title: movieData.original_title,
         banner: movieData.backdrop_path,
         caratula: movieData.poster_path,
@@ -40,12 +41,12 @@ class Movies {
         briefDescription: movieData.tagline,
         description: movieData.overview,
         releaseDate: movieData.release_date,
-        genre: movieData.genres.map(genre => genre.name),
-        director: movieData.production_companies.map(company => company.name).join(', '),
-        createdBy: movieData.production_companies.map(company => company.name).join(', '),
+        genre: movieData.genres ? movieData.genres.map(genre => genre.name) : [],
+        director: movieData.production_companies ? movieData.production_companies.map(company => company.name).join(', ') : '',
+        createdBy: movieData.production_companies ? movieData.production_companies.map(company => company.name).join(', ') : '',
         cast: cast,
         ratings: movieData.vote_average,
-        categories: movieData.genres.map(genre => genre.name),
+        categories: movieData.genres ? movieData.genres.map(genre => genre.name) : [],
         budget: movieData.budget,
         originalLanguage: movieData.original_language,
       });
