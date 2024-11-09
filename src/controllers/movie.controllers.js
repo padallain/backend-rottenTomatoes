@@ -89,6 +89,23 @@ class Movies {
     }
   }
 
+  async getLastSeen(req, res) {
+    const { userId } = req.body; // Assuming userId is passed in the request body
+
+    try {
+      const user = await User.findById(userId).populate('lastSeenMovies');
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.status(200).json({ lastSeenMovies: user.lastSeenMovies });
+    } catch (error) {
+      console.error("Error fetching last seen movies:", error);
+      res.status(500).json({ message: "Error fetching last seen movies", error: error.message });
+    }
+  }
+
 
   // Get trending movies
   async getTrendingMovies(req, res) {
