@@ -20,14 +20,6 @@ router.delete('/deleteUser', eraseAccount);
 
 // Movie routes
 router.get('/trendingMovies', Movie.getTrendingMovies.bind(Movie)); 
-router.get('/getOneNote/:noteId', Notes.getOneNote.bind(Notes)); // Get a single note by ID
-router.post('/createNote', Notes.createNote.bind(Notes)); // Create a new note
-router.put('/updateNote/:noteId', Notes.updateNote.bind(Notes)); // Update a note by ID
-
-// Category routes
-router.post('/createCategory', categoryController.createCategory);
-router.get('/getCategories', categoryController.getCategories);
-router.put('/updateCategory/:categoryId', categoryController.updateCategory);
-router.delete('/deleteCategory/:categoryId', categoryController.deleteCategory);
+router.get('/movie/:movieId', Movie.getOneMovie.bind(Movie));
 
 export default router;
