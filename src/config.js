@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-const DB_URI = process.env.DB_URI;
-const PORT = process.env.PORT || 8000;
-const SECRET_KEY = process.env.SECRET_KEY;
+export const DB_URI = process.env.DB_URI;
+export const PORT = process.env.PORT || 8000;
+export const SECRET_KEY = process.env.SECRET_KEY;
 
 const mongoose = require('mongoose');
 
-const connectToDatabase = async () => {
+ export const connectToDatabase = async () => {
     try {
         await mongoose.connect(DB_URI, {
             useNewUrlParser: true,
@@ -20,4 +20,4 @@ const connectToDatabase = async () => {
     }
 };
 
-module.exports = { DB_URI, PORT, SECRET_KEY, connectToDatabase };
+
