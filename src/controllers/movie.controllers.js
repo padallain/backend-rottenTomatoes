@@ -1,5 +1,6 @@
-const fetch = require('node-fetch');
-const Movie = require('../models/movie.model');
+import fetch from 'node-fetch';
+import Movie from '../models/movie.model.js';
+
 
 class Movies {
   // Create a new movie
@@ -161,4 +162,4 @@ class Movies {
   }
 }
 
-module.exports = new Movies();
+export default new Movies();

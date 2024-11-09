@@ -1,4 +1,4 @@
-const Review = require('../models/review.model'); // Assuming you have a Review model
+import Review from '../models/review.model.js';
 
 class ReviewController {
   // Create a new review
@@ -88,4 +88,4 @@ class ReviewController {
   }
 }
 
-module.exports = new ReviewController();
+export default new ReviewController();

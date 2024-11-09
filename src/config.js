@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 const DB_URI = process.env.DB_URI;
 const PORT = process.env.PORT || 8000;

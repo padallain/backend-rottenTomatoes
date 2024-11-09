@@ -1,12 +1,11 @@
-const User = require("../models/user.model");
-const jwt = require('jsonwebtoken'); 
-const nodemailer = require("nodemailer");
-const crypto = require('crypto');
-const { time } = require("console");
+import User from "../models/user.model.js";
+import jwt from 'jsonwebtoken'; 
+import nodemailer from "nodemailer";
+import crypto from 'crypto';
+import e from "express";
 
 
-
-const register = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { email_user, password, username } = req.body;
 
@@ -55,7 +54,7 @@ const register = async (req, res) => {
 };
 
 
-const createLogin = async (req, res) => {
+export const createLogin = async (req, res) => {
   try {
     const { identifier, password } = req.body; // Use 'identifier' to accept either username or email
     console.log(identifier, password);
@@ -109,7 +108,7 @@ const transporter = nodemailer.createTransport({
   debug: true    // Habilitar modo de depuración
 });
 
-const resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
   const { email_user } = req.body;
 
   // Verificar si el correo fue proporcionado
@@ -165,7 +164,7 @@ const resetPassword = async (req, res) => {
 };
 
 
-const checkResetToken = async (req, res) => {
+export const checkResetToken = async (req, res) => {
   const { email_user, resetCode } = req.body;
   console.log(req.body)
   console.log(email_user, resetCode)
@@ -194,7 +193,7 @@ const checkResetToken = async (req, res) => {
 
 
 
-const savePassword = async (req, res) => {
+export const savePassword = async (req, res) => {
   const { email_user, newPassword, confirmPassword } = req.body;
 
   console.log(req.body)
@@ -231,7 +230,7 @@ const savePassword = async (req, res) => {
 };
 
 
-const eraseAccount = async (req, res) => {
+export const eraseAccount = async (req, res) => {
   const { username } = req.body;
 
   try {
@@ -247,12 +246,12 @@ const eraseAccount = async (req, res) => {
 };
 
 
-module.exports = {
-  register,
-  createLogin,
-  resetPassword,
-  checkResetToken,
-  savePassword, 
-  eraseAccount
-
+export const logout = async (req, res) => {
+  try {
+    req.session.destroy();
+    res.status(200).json({ message: "Logout successful" });
+  } catch (err) {
+    console.error('Error logging out:', err);
+    res.status(500).json({ message: "Server error" });
+  }
 }

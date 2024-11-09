@@ -1,10 +1,10 @@
-const express = require("express");
-const session = require("express-session");
-const morgan = require("morgan");
-const cors = require("cors"); 
-const { connectToDatabase } = require("./db");
-const startRoutes = require("./routes/start.routes");
-const { PORT, SECRET_KEY } = require("./config");
+import express from "express";
+import session from "express-session";
+import morgan from "morgan";
+import cors from "cors";
+import { connectToDatabase } from "./db.js";
+import startRoutes from "./routes/start.routes.js";
+import { PORT, SECRET_KEY } from "./config.js";
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 
 app.use(session({
-    secret: "your_secret_key",
+    secret: SECRET_KEY,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }

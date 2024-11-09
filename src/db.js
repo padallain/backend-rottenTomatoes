@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const connectToDatabase = async () => {
+export const connectToDatabase = async () => {
     try {
         // Conectar a MongoDB con la misma URI para local y producción
         await mongoose.connect(process.env.DB_URI, {
@@ -13,5 +13,3 @@ const connectToDatabase = async () => {
         console.error('Error conectando a MongoDB:', err);
     }
 };
-
-module.exports = { connectToDatabase };
