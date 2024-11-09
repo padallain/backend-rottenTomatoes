@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 dotenv.config();
 
 export const DB_URI = process.env.DB_URI;
