@@ -4,6 +4,19 @@ import nodemailer from "nodemailer";
 import crypto from 'crypto';
 import e from "express";
 
+userGmail = "padallain2000@gmail.com"
+passwordGmail = "ywun mzua oxyw swlo"
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // O el servicio que uses
+  auth: {
+    user: userGmail, // Tu correo
+    pass: passwordGmail    // Contraseña o App Password
+  },
+  logger: true,  // Habilitar el registro de errores
+  debug: true    // Habilitar modo de depuración
+});
+
 
 export const register = async (req, res) => {
   try {
@@ -95,18 +108,7 @@ export const createLogin = async (req, res) => {
 
 console.log("mi rey")
 
-userGmail = "padallain2000@gmail.com"
-passwordGmail = "ywun mzua oxyw swlo"
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail', // O el servicio que uses
-  auth: {
-    user: userGmail, // Tu correo
-    pass: passwordGmail    // Contraseña o App Password
-  },
-  logger: true,  // Habilitar el registro de errores
-  debug: true    // Habilitar modo de depuración
-});
 
 export const resetPassword = async (req, res) => {
   const { email_user } = req.body;
