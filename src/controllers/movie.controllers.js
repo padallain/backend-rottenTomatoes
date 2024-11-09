@@ -66,7 +66,7 @@ class Movies {
 
     try {
       const user = await User.findById(userId).populate('lastSeenMovies');
-      const movie = await Movie.findById(movieId);
+      const movie = await Movie.findOne({ movieId: movieId });
 
       if (!user || !movie) {
         return res.status(404).json({ message: 'User or Movie not found' });
