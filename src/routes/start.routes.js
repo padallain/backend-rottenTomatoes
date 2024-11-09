@@ -1,7 +1,7 @@
 import express from 'express';
 import { register, createLogin, resetPassword, checkResetToken, savePassword, eraseAccount } from '../controllers/auth.controllers.js';
 import Movie from '../controllers/movie.controllers.js'; 
-import categoryController from '../controllers/review.controllers.js';
+
 
 const router = express.Router();
 
@@ -20,6 +20,6 @@ router.delete('/deleteUser', eraseAccount);
 
 // Movie routes
 router.get('/trendingMovies', Movie.getTrendingMovies.bind(Movie)); 
-router.get('/movie/:movieId', Movie.getOneMovie.bind(Movie));
-
+router.get('/getOneMovie', Movie.getOneMovie.bind(Movie));
+  
 export default router;

@@ -52,19 +52,7 @@ class Movies {
 
   // Get a single movie by ID
   async getOneMovie(req, res) {
-    try {
-      const { movieId } = req.params;
-      const movie = await Movie.findById(movieId);
-
-      if (!movie) {
-        return res.status(404).json({ message: "Movie not found" });
-      }
-
-      res.status(200).json(movie);
-    } catch (error) {
-      console.error("Error fetching movie:", error);
-      res.status(500).json({ message: "Error fetching movie", error: error.message });
-    }
+    res.send('Get one movie');
   }
 
   // Get trending movies
