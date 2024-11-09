@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
   resetTokenExpires: {
     type: Date, 
   },
+  movies: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Movie'
+  }],
   lastSeenMovies: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Movie'
