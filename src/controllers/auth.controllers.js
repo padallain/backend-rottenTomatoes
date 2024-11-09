@@ -4,8 +4,8 @@ import nodemailer from "nodemailer";
 import crypto from 'crypto';
 import e from "express";
 
-userGmail = "padallain2000@gmail.com"
-passwordGmail = "ywun mzua oxyw swlo"
+const userGmail = "padallain2000@gmail.com"
+const passwordGmail = "ywun mzua oxyw swlo"
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', // O el servicio que uses
