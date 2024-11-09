@@ -21,7 +21,16 @@ const userSchema = new mongoose.Schema({
   resetTokenExpires: {
     type: Date, 
   },
+  movies: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Movie'
+  }],
+  movieLastSeen: {
+    type: Date, 
+  }
 });
+
+
 
 // El método pre-guardado, si es necesario, para generar el token puede añadirse aquí
 
