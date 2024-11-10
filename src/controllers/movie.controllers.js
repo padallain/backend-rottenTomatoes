@@ -90,7 +90,7 @@ class Movies {
   }
 
   async getLastSeen(req, res) {
-    const { userId } = req.body; // Assuming userId is passed in the request body
+    const { userId } = req.params; // Retrieve userId from route parameters
 
     try {
       const user = await User.findById(userId).populate('lastSeenMovies');
