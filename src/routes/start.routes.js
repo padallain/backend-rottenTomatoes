@@ -1,6 +1,7 @@
 import express from 'express';
 import { register, createLogin, resetPassword, checkResetToken, savePassword, eraseAccount } from '../controllers/auth.controllers.js';
 import Movie from '../controllers/movie.controllers.js'; 
+import Series from '../controllers/series.controllers.js';
 
 
 const router = express.Router();
@@ -25,5 +26,8 @@ router.post('/saveOurMovie', Movie.saveOurMovies.bind(Movie));
 router.post('/getLast', Movie.getLastSeen.bind(Movie));
 router.get('/popularMovies', Movie.getPopularMovies.bind(Movie));
 router.get('/getSpecificMovie/:nameMovie', Movie.getSpecificMovie.bind(Movie));
+
+// Series routes
+router.get('/popularSeries', Movie.getPopularSeries.bind(Series));
   
 export default router;
