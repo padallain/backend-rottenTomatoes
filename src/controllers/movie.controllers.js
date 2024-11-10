@@ -90,8 +90,8 @@ class Movies {
   }
 
   async getLastSeen(req, res) {
-    userId = req.body;
-    res.send(`Get last seen movies for user with ID: ${userId}`);
+    personId = req.body;
+    res.send(`Get last seen movies for user with ID: ${personId}`);
   }
 
 
