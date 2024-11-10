@@ -25,9 +25,10 @@ router.post('/createMovie', Movie.createMovie.bind(Movie));
 router.post('/saveOurMovie', Movie.saveOurMovies.bind(Movie)); 
 router.post('/getLast', Movie.getLastSeen.bind(Movie));
 router.get('/popularMovies', Movie.getPopularMovies.bind(Movie));
+router.get('/topRated', Movie.getTopRatedMovies.bind(Movie));
 router.get('/getSpecificMovie/:nameMovie', Movie.getSpecificMovie.bind(Movie));
 
 // Series routes
-router.get('/popularSeries', Movie.getPopularSeries.bind(Series));
+router.get('/popularSeries', Series.getPopularSeries.bind(Series));
   
 export default router;
