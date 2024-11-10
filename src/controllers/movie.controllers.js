@@ -183,22 +183,54 @@ class Movies {
     }
   }
 
-  // Delete a movie by ID
-  async deleteMovie(req, res) {
-    try {
-      const { movieId } = req.params;
-      const deletedMovie = await Movie.findByIdAndDelete(movieId);
+  // get all popular movies
+  async getPopularMovies(req, res) {
+    const url = 'https://api.themoviedb.org/3/movie/popular?language=en-US';
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMDk4ODMyOC4xODI2MDA1LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.teR3vdfItSFXOHQsLQAdjiG0cos3Owbtf2cjyvKjTDI'
+      }
+    };
 
-      if (!deletedMovie) {
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      res.status(200).json(data);
+    } catch (error) {
+      console.error("Error fetching popular movies:", error);
+      res.status(500).json({ message: "Error fetching popular movies", error: error.message });
+    }
+  }
+
+  //Search for a name movie
+  async getSpecificMovie(req, res) {
+    const { nameMovie } = req.params;
+    const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(nameMovie)}&language=en-US`;
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMDk4ODMyOC4xODI2MDA1LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.teR3vdfItSFXOHQsLQAdjiG0cos3Owbtf2cjyvKjTDI'
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      if (data.results.length === 0) {
         return res.status(404).json({ message: "Movie not found" });
       }
 
-      res.status(200).json({ message: "Movie deleted successfully" });
+      res.status(200).json(data.results);
     } catch (error) {
-      console.error("Error deleting movie:", error);
-      res.status(500).json({ message: "Error deleting movie", error: error.message });
+      console.error("Error fetching movie:", error);
+      res.status(500).json({ message: "Error fetching movie", error: error.message });
     }
   }
+
 }
 
 export default new Movies();
