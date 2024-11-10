@@ -22,6 +22,6 @@ router.delete('/deleteUser', eraseAccount);
 router.get('/trendingMovies', Movie.getTrendingMovies.bind(Movie)); 
 router.post('/createMovie', Movie.createMovie.bind(Movie)); 
 router.post('/saveOurMovie', Movie.saveOurMovies.bind(Movie)); 
-router.get('/getLastSeen/:userId', Movie.getLastSeen.bind(Movie));
+router.get('/getLastSeen', Movie.getLastSeen.bind(Movie));
   
 export default router;
