@@ -23,5 +23,7 @@ router.get('/trendingMovies', Movie.getTrendingMovies.bind(Movie));
 router.post('/createMovie', Movie.createMovie.bind(Movie)); 
 router.post('/saveOurMovie', Movie.saveOurMovies.bind(Movie)); 
 router.post('/getLast', Movie.getLastSeen.bind(Movie));
+router.get('/popularMovies', Movies.getPopularMovies.bind(Movies));
+router.get('/getSpecificMovie/:nameMovie', Movies.getSpecificMovie.bind(Movies));
   
 export default router;
