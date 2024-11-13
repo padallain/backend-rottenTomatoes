@@ -30,5 +30,14 @@ router.get('/getSpecificMovie/:nameMovie', Movie.getSpecificMovie.bind(Movie));
 
 // Series routes
 router.get('/popularSeries', Series.getPopularSeries.bind(Series));
+
+// Review routes
+router.post('/createReview', ReviewController.createReview.bind(ReviewController));
+router.get('/reviews', ReviewController.getReviews.bind(ReviewController));
+router.get('/review/:reviewId', ReviewController.getReviewById.bind(ReviewController));
+router.get('/reviews/movie/:movieId', ReviewController.getReviewMovie.bind(ReviewController));
+router.get('/reviews/author/:authorId', ReviewController.getReviewAuthor.bind(ReviewController));
+router.put('/review/:reviewId', ReviewController.updateReview.bind(ReviewController));
+router.delete('/review/:reviewId', ReviewController.deleteReview.bind(ReviewController));
   
 export default router;
