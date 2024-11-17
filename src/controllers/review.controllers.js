@@ -48,8 +48,8 @@ class ReviewController {
     }
 
 
-    }
   }
+  
 
   // Get a single review by ID
   async getReviewById(req, res) {
@@ -125,5 +125,6 @@ class ReviewController {
     }
   }
 }
+
 
 export default new ReviewController();
