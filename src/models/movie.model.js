@@ -112,5 +112,10 @@ const movieSchema = new Schema(
   }
 );
 
+// Add validation to limit the cast array to 10 members
+movieSchema.path('cast').validate(function (value) {
+  return value.length <= 10;
+}, 'The cast array exceeds the limit of 10 members.');
+
 const Movie = mongoose.model('Movie', movieSchema);
 export default Movie;
