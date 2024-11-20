@@ -28,6 +28,11 @@ router.post('/getLast', Movie.getLastSeen.bind(Movie));
 router.get('/popularMovies', Movie.getPopularMovies.bind(Movie));
 router.get('/topRated', Movie.getTopRatedMovies.bind(Movie));
 router.get('/getSpecificMovie/:nameMovie', Movie.getSpecificMovie.bind(Movie));
+router.post('/yourWatchlist', Movie.addToWatchlist.bind(Movie));
+router.get('/getLastSeen/:userId', Movie.getLastSeen.bind(Movie));
+router.post('/saveYourWatchlist', Movie.saveYourWatchlist.bind(Movie)); 
+router.get('/getWatchlist/:userId', Movie.getWatchlist.bind(Movie)); 
+
 
 // Series routes
 router.get('/popularSeries', Series.getPopularSeries.bind(Series));
