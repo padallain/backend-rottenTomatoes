@@ -305,21 +305,21 @@ class Movies {
       }
     }
 
-    // Get all last seen movies for a user
-  async getLastSeen(req, res) {
+  // Get all watchlist movies for a user
+  async getWatchlist(req, res) {
     const { userId } = req.params; // Assuming userId is passed as a URL parameter
 
     try {
-      const user = await User.findById(userId).populate('lastSeenMovies');
+      const user = await User.findById(userId).populate('watchlist');
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
 
-      res.status(200).json({ lastSeenMovies: user.lastSeenMovies });
+      res.status(200).json({ watchlist: user.watchlist });
     } catch (error) {
-      console.error("Error fetching last seen movies:", error);
-      res.status(500).json({ message: "Error fetching last seen movies", error: error.message });
+      console.error("Error fetching watchlist:", error);
+      res.status(500).json({ message: "Error fetching watchlist", error: error.message });
     }
   }
 
