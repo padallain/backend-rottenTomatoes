@@ -37,7 +37,7 @@ class Movies {
       const newMovie = new Movie({
         movieId: movieData.id, // Add movieId here
         title: movieData.original_title,
-        banner: movieData.backdrop_path,
+        banner: movieData.poster_path,
         caratula: movieData.poster_path,
         duration: movieData.runtime,
         briefDescription: movieData.tagline,
