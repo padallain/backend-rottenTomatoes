@@ -29,9 +29,9 @@ router.get('/popularMovies', Movie.getPopularMovies.bind(Movie));
 router.get('/topRated', Movie.getTopRatedMovies.bind(Movie));
 router.get('/getSpecificMovie/:nameMovie', Movie.getSpecificMovie.bind(Movie));
 router.post('/yourWatchlist', Movie.addToWatchlist.bind(Movie));
-router.get('/getWatchlist/:userId', Movie.getWatchlist.bind(Movie)); 
+router.get('/getWatchlist/:personId', Movie.getWatchlist.bind(Movie)); 
 router.post('/addLastSeen', Movie.addLastSeen.bind(Movie)); 
-router.get('/getLastSeen/:userId', Movie.getLastSeen.bind(Movie));
+router.get('/getLastSeen/:persomId', Movie.getLastSeen.bind(Movie));
 
 
 

@@ -307,10 +307,10 @@ class Movies {
 
   // Get all watchlist movies for a user
   async getWatchlist(req, res) {
-    const { userId } = req.params; // Assuming userId is passed as a URL parameter
+    const { personId } = req.params; // Assuming userId is passed as a URL parameter
 
     try {
-      const user = await User.findById(userId).populate('watchlist');
+      const user = await User.findById(personId).populate('watchlist');
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -353,10 +353,10 @@ class Movies {
 
     // Get all last seen movies for a user
   async getLastSeen(req, res) {
-    const { userId } = req.params; // Assuming userId is passed as a URL parameter
+    const { personId } = req.params; // Assuming userId is passed as a URL parameter
 
     try {
-      const user = await User.findById(userId).populate('lastSeenMovies');
+      const user = await User.findById(personId).populate('lastSeenMovies');
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
