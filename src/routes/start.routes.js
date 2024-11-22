@@ -31,7 +31,7 @@ router.get('/getSpecificMovie/:nameMovie', Movie.getSpecificMovie.bind(Movie));
 router.post('/yourWatchlist', Movie.addToWatchlist.bind(Movie));
 router.get('/getWatchlist/:personId', Movie.getWatchlist.bind(Movie)); 
 router.post('/addLastSeen', Movie.addLastSeen.bind(Movie)); 
-router.get('/getLastSeen/:persomId', Movie.getLastSeen.bind(Movie));
+router.get('/getLastSeen/:personId', Movie.getLastSeen.bind(Movie));
 
 
 
