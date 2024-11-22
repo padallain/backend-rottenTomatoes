@@ -9,12 +9,11 @@ class Movies {
     const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
     const castUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`;
     const options = {
-      method: "GET",
+      method: 'GET',
       headers: {
-        accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8",
-      },
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
+      }
     };
 
     try {
@@ -26,57 +25,39 @@ class Movies {
       const castResponse = await fetch(castUrl, options);
       const castData = await castResponse.json();
 
-      // Map cast information
-      const cast = castData.cast
-        ? castData.cast.map((member) => ({
-            id: member.id, // Include the id from the API
-            name: member.name,
-            role: member.character,
-            profile_path: member.profile_path,
-            character: member.character,
-          }))
-        : [];
+      // Map cast information and limit to the first 10 members
+      const cast = castData.cast ? castData.cast.slice(0, 10).map(member => ({
+        id: member.id, // Include the id from the API
+        name: member.name,
+        role: member.character,
+        profile_path: member.profile_path,
+        character: member.character,
+      })) : [];
 
       const newMovie = new Movie({
         movieId: movieData.id, // Add movieId here
         title: movieData.original_title,
-        banner: movieData.poster_path,
+        banner: movieData.backdrop_path,
         caratula: movieData.poster_path,
         duration: movieData.runtime,
         briefDescription: movieData.tagline,
         description: movieData.overview,
         releaseDate: movieData.release_date,
-        genre: movieData.genres
-          ? movieData.genres.map((genre) => genre.name)
-          : [],
-        director: movieData.production_companies
-          ? movieData.production_companies
-              .map((company) => company.name)
-              .join(", ")
-          : "",
-        createdBy: movieData.production_companies
-          ? movieData.production_companies
-              .map((company) => company.name)
-              .join(", ")
-          : "",
+        genre: movieData.genres ? movieData.genres.map(genre => genre.name) : [],
+        director: movieData.production_companies ? movieData.production_companies.map(company => company.name).join(', ') : '',
+        createdBy: movieData.production_companies ? movieData.production_companies.map(company => company.name).join(', ') : '',
         cast: cast,
         ratings: movieData.vote_average,
-        categories: movieData.genres
-          ? movieData.genres.map((genre) => genre.name)
-          : [],
+        categories: movieData.genres ? movieData.genres.map(genre => genre.name) : [],
         budget: movieData.budget,
         originalLanguage: movieData.original_language,
       });
 
       const savedMovie = await newMovie.save();
-      res
-        .status(201)
-        .json({ message: "Movie created successfully", movie: savedMovie });
+      res.status(201).json({ message: "Movie created successfully", movie: savedMovie });
     } catch (error) {
       console.error("Error creating movie:", error);
-      res
-        .status(500)
-        .json({ message: "Error creating movie", error: error.message });
+      res.status(500).json({ message: "Error creating movie", error: error.message });
     }
   }
 
