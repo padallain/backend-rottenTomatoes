@@ -34,6 +34,7 @@ router.post('/addLastSeen', Movie.addLastSeen.bind(Movie));
 router.get('/getLastSeen/:personId', Movie.getLastSeen.bind(Movie));
 router.get('/moviesInTheater', Movie.moviesInTheater.bind(Movie)); 
 router.get('/actionMoviesByRating', Movie.getActionMoviesByRating.bind(Movie)); 
+router.get('/comedyMoviesByRating', Movie.getcOMEDYMoviesByRating.bind(Movie)); 
 router.get('/animatedMoviesByRating', Movie.getAnimatedMoviesByRating.bind(Movie)); 
 router.get('/horrorMoviesByRating', Movie.getHorrorMoviesByRating.bind(Movie));
 
