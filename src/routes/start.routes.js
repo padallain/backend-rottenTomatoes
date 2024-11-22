@@ -32,7 +32,7 @@ router.post('/yourWatchlist', Movie.addToWatchlist.bind(Movie));
 router.get('/getWatchlist/:personId', Movie.getWatchlist.bind(Movie)); 
 router.post('/addLastSeen', Movie.addLastSeen.bind(Movie)); 
 router.get('/getLastSeen/:personId', Movie.getLastSeen.bind(Movie));
-router.get('/moviesInTheater', Movies.moviesInTheater.bind(Movies)); // Add this line
+router.get('/moviesInTheater', Movie.moviesInTheater.bind(Movie)); // Add this line
 
 
 
