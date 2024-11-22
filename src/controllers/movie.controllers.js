@@ -447,6 +447,83 @@ class Movies {
     }
   }
 
+  async getComedyMoviesByRating(req, res) {
+    const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=35';
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      if (data.results.length === 0) {
+        return res.status(404).json({ message: "No movies found" });
+      }
+
+      res.status(200).json(data.results);
+    } catch (error) {
+      console.error("Error fetching comedy movies by rating:", error);
+      res.status(500).json({ message: "Error fetching comedy movies by rating", error: error.message });
+    }
+  }
+  
+  async getAnimatedMoviesByRating(req, res) {
+    const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=16';
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      if (data.results.length === 0) {
+        return res.status(404).json({ message: "No movies found" });
+      }
+
+      res.status(200).json(data.results);
+    } catch (error) {
+      console.error("Error fetching animated movies by rating:", error);
+      res.status(500).json({ message: "Error fetching animated movies by rating", error: error.message });
+    }
+  }
+
+  async getHorrorMoviesByRating(req, res) {
+    const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=27';
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
+      }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      if (data.results.length === 0) {
+        return res.status(404).json({ message: "No movies found" });
+      }
+
+      res.status(200).json(data.results);
+    } catch (error) {
+      console.error("Error fetching horror movies by rating:", error);
+      res.status(500).json({ message: "Error fetching horror movies by rating", error: error.message });
+    }
+  }
+
+
+
 
   
 }
