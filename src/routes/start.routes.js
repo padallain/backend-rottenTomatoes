@@ -41,7 +41,7 @@ router.get('/horrorMoviesByRating', Movie.getHorrorMoviesByRating.bind(Movie));
 
 // Series routes
 router.get('/popularSeries', Series.getPopularSeries.bind(Series));
-outer.get('/topRatedSeries', Series.getTopRatedSeries.bind(Series));
+router.get('/topRatedSeries', Series.getTopRatedSeries.bind(Series));
 router.get('/actionAdventureSeries', Series.getActionAdventureSeries.bind(Series));
 router.get('/animationSeries', Series.getAnimationSeries.bind(Series));
 router.get('/dramaSeries', Series.getDramaSeries.bind(Series));
