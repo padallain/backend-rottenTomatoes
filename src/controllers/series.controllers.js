@@ -1,9 +1,11 @@
 import fetch from "node-fetch";
+import SeriesModel from "../models/series.model.js";
+import User from "../models/user.model.js";
 
 class Series {
 
 
-  async createSeries(req, res) {
+  async saveSeries(req, res) {
     const { seriesId } = req.body; // Assuming seriesId is passed in the request body
     const seriesUrl = `https://api.themoviedb.org/3/tv/${seriesId}?language=en-US`;
     const castUrl = `https://api.themoviedb.org/3/tv/${seriesId}/credits?language=en-US`;
@@ -14,16 +16,16 @@ class Series {
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
       }
     };
-  
+
     try {
       // Fetch series details
       const seriesResponse = await fetch(seriesUrl, options);
       const seriesData = await seriesResponse.json();
-  
+
       // Fetch cast information
       const castResponse = await fetch(castUrl, options);
       const castData = await castResponse.json();
-  
+
       // Map cast information and limit to the first 10 members
       const cast = castData.cast ? castData.cast.slice(0, 10).map(member => ({
         id: member.id, // Include the id from the API
@@ -32,7 +34,7 @@ class Series {
         profile_path: member.profile_path,
         character: member.character,
       })) : [];
-  
+
       const newSeries = new SeriesModel({
         seriesId: seriesData.id, // Add seriesId here
         title: seriesData.original_name,
@@ -51,7 +53,7 @@ class Series {
         budget: seriesData.budget,
         originalLanguage: seriesData.original_language,
       });
-  
+
       const savedSeries = await newSeries.save();
       res.status(201).json({ message: "Series created successfully", series: savedSeries });
     } catch (error) {
@@ -59,6 +61,7 @@ class Series {
       res.status(500).json({ message: "Error creating series", error: error.message });
     }
   }
+
 
   // Save a series to the user's watchlist
   async addToWatchlist(req, res) {
