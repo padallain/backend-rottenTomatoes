@@ -127,10 +127,10 @@ async getLastSeen(req, res) {
 
   // Save a series to the user's last seen list
   async addLastSeen(req, res) {
-    const { personId, seriesId } = req.body;
+    const { userId, seriesId } = req.body;
 
     try {
-      const user = await User.findById(personId).populate("lastSeenSeries");
+      const user = await User.findById(userId).populate("lastSeenSeries");
       const series = await SeriesModel.findOne({ seriesId });
 
       if (!user || !series) {
