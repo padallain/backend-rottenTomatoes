@@ -51,6 +51,10 @@ const movieSchema = new Schema(
           type: String,
           trim: true,
         },
+        profile_path: { // Add profile_path field
+          type: String,
+          trim: true,
+        },
       },
     ],
     ratings: {
