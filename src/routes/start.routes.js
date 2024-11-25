@@ -41,6 +41,11 @@ router.get('/horrorMoviesByRating', Movie.getHorrorMoviesByRating.bind(Movie));
 
 
 // Series routes
+router.post('/createSeries', Series.saveSeries.bind(Series));
+router.post('/addToWatchlistSeries', Series.addToWatchlist.bind(Series));
+router.post('/addLastSeenSeries', Series.addLastSeen.bind(Series));
+router.get('/watchlistSeries/:personId', Series.getWatchlist.bind(Series));
+router.get('/lastSeenSeries/:personId', Series.getLastSeen.bind(Series));
 router.get('/popularSeries', Series.getPopularSeries.bind(Series));
 router.get('/topRatedSeries', Series.getTopRatedSeries.bind(Series));
 router.get('/actionAdventureSeries', Series.getActionAdventureSeries.bind(Series));
