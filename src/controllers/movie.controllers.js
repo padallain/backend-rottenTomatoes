@@ -30,8 +30,7 @@ class Movies {
         id: member.id, // Include the id from the API
         name: member.name,
         role: member.character,
-        profile_path: member.profile_path,
-        character: member.character,
+        profile_path: member.profile_path // Include the profile_path from the API
       })) : [];
 
       const newMovie = new Movie({
