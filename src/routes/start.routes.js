@@ -53,6 +53,7 @@ router.get('/actionAdventureSeries', Series.getActionAdventureSeries.bind(Series
 router.get('/animationSeries', Series.getAnimationSeries.bind(Series));
 router.get('/dramaSeries', Series.getDramaSeries.bind(Series));
 router.get('/comedySeries', Series.getComedySeries.bind(Series));
+router.get('/getSeriesByIdAndTitle/:seriesId/:title', Series.getSeriesByIdAndTitle.bind(Series));
 
 // Review routes
 router.post('/createReview', ReviewController.createReview.bind(ReviewController));

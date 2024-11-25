@@ -62,6 +62,23 @@ class Series {
     }
   }
 
+ // Get a single series by seriesId and title
+ async getSeriesByIdAndTitle(req, res) {
+  const { seriesId, title } = req.params; // Assuming seriesId and title are passed as URL parameters
+
+  try {
+    const series = await SeriesModel.findOne({ seriesId, title });
+
+    if (!series) {
+      return res.status(404).json({ message: "Series not found" });
+    }
+
+    res.status(200).json(series);
+  } catch (error) {
+    console.error("Error fetching series:", error);
+    res.status(500).json({ message: "Error fetching series", error: error.message });
+  }
+}
 
   // Save a series to the user's watchlist
   async addToWatchlist(req, res) {
