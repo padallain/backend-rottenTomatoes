@@ -68,21 +68,21 @@ class Series {
     const { userId, seriesId } = req.body;
 
     try {
-      const user = await User.findById(userId).populate("watchlist");
+      const user = await User.findById(userId).populate("watchlistSeries");
       const series = await SeriesModel.findOne({ seriesId });
 
       if (!user || !series) {
         return res.status(404).json({ message: "User or Series not found" });
       }
 
-      user.watchlist.push(series);
+      user.watchlistSeries.push(series);
 
-      if (user.watchlist.length > 15) {
-        user.watchlist.shift();
+      if (user.watchlistSeries.length > 15) {
+        user.watchlistSeries.shift();
       }
 
       await user.save();
-      res.status(200).json({ message: "Series added to watchlist", watchlist: user.watchlist });
+      res.status(200).json({ message: "Series added to watchlist", watchlistSeries: user.watchlistSeries });
     } catch (error) {
       console.error("Error adding series to watchlist:", error);
       res.status(500).json({ message: "Error adding series to watchlist", error: error.message });
@@ -92,15 +92,15 @@ class Series {
 
   async getWatchlist(req, res) {
     const { personId } = req.params;
-  
+
     try {
-      const user = await User.findById(personId).populate("watchlist");
-  
+      const user = await User.findById(personId).populate("watchlistSeries");
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-  
-      res.status(200).json({ watchlist: user.watchlist });
+
+      res.status(200).json({ watchlistSeries: user.watchlistSeries });
     } catch (error) {
       console.error("Error fetching watchlist:", error);
       res.status(500).json({ message: "Error fetching watchlist", error: error.message });
@@ -108,22 +108,22 @@ class Series {
   }
 
   // Get user's last seen series
-async getLastSeen(req, res) {
-  const { personId } = req.params;
+  async getLastSeen(req, res) {
+    const { personId } = req.params;
 
-  try {
-    const user = await User.findById(personId).populate("lastSeenSeries");
+    try {
+      const user = await User.findById(personId).populate("lastSeenSeries");
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json({ lastSeenSeries: user.lastSeenSeries });
+    } catch (error) {
+      console.error("Error fetching last seen series:", error);
+      res.status(500).json({ message: "Error fetching last seen series", error: error.message });
     }
-
-    res.status(200).json({ lastSeenSeries: user.lastSeenSeries });
-  } catch (error) {
-    console.error("Error fetching last seen series:", error);
-    res.status(500).json({ message: "Error fetching last seen series", error: error.message });
   }
-}
 
   // Save a series to the user's last seen list
   async addLastSeen(req, res) {
