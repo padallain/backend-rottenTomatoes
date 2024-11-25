@@ -61,6 +61,25 @@ class Movies {
     }
   }
 
+ // Get a single movie by movieId and title
+ async getMovieByIdAndTitle(req, res) {
+  const { id, title } = req.params; // Assuming movieId and title are passed as URL parameters
+
+  try {
+    const movie = await Movie.findOne({ id, title });
+
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.status(200).json(movie);
+  } catch (error) {
+    console.error("Error fetching movie:", error);
+    res.status(500).json({ message: "Error fetching movie", error: error.message });
+  }
+}
+  
+
   // Get a single movie by ID
   async saveOurMovies(req, res) {
     const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
