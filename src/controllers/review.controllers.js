@@ -35,7 +35,7 @@ class ReviewController {
   async getReviewMovie(req,res){
     try{
       const {movieId} = req.params
-      const reviews = await Review.find({ movieID }).populate('author').populate('movie');
+      const reviews = await Review.find({ movieId }).populate('author').populate('movie');
 
       if (!reviews) {
         return res.status(404).json({ message: 'Review not found' });
