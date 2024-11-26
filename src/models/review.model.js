@@ -19,6 +19,12 @@ const reviewSchema = new Schema(
       ref: 'Movie',                         // Relate to the Movie model
       required: true,                      // The movie is required
     },
+    rating: {
+      type: Number,
+      required: true, // The rating of the review is required
+      min: 0,         // Minimum value for rating
+      max: 100,        // Maximum value for rating
+    },
   },
   {
     timestamps: true,  // Automatically add createdAt and updatedAt fields
