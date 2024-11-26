@@ -80,7 +80,7 @@ class Movies {
 
 // Update lastSeen to the current date and time
 async updateLastSeen(req, res) {
-  const { movieId } = req.params; // Assuming movieId is passed as a URL parameter
+  const { movieId } = req.body; // Assuming movieId is passed as a URL parameter
 
   try {
     const movie = await Movie.findByIdAndUpdate(

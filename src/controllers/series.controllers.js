@@ -64,7 +64,7 @@ class Series {
 
    // Update lastSeen to the current date and time for a series
    async updateLastSeen(req, res) {
-    const { seriesId } = req.params; // Assuming seriesId is passed as a URL parameter
+    const { seriesId } = req.body; // Assuming seriesId is passed as a URL parameter
 
     try {
       const series = await SeriesModel.findOneAndUpdate(
