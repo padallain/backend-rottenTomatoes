@@ -3,14 +3,14 @@ import Review from '../models/review.model.js';
 class ReviewController {
   // Create a new review
   async createReview(req, res) {
-    const { content, author, movie } = req.body;
+    const { content, author, movie, rating} = req.body;
 
-    if (!content || !author || !movie) {
+    if (!content || !author || !movie || !rating) {
       return res.status(400).json({ message: 'Content, author, and movie are required' });
     }
 
     try {
-      const newReview = new Review({ content, author, movie });
+      const newReview = new Review({ content, author, movie, rating });
       await newReview.save();
       res.status(201).json({ message: 'Review created successfully', newReview });
     } catch (err) {
