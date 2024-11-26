@@ -41,7 +41,7 @@ router.get('/horrorMoviesByRating', Movie.getHorrorMoviesByRating.bind(Movie));
 router.get('/getMovieByIdAndTitle/:movieId/:title', Movie.getMovieByIdAndTitle.bind(Movie));
 router.post('/updateLastSeen', Movie.updateLastSeen.bind(Movie)); 
 router.delete('/removeFromWatchlist', Movie.removeFromWatchlist.bind(Movie)); 
-router.get('/isMovieInLastSeen/:userId/:movieId', Movie.isMovieInLastSeen.bind(Movie)); // New route
+router.get('/isMovieInLastSeen/:userId/:movieId', Movie.isMovieInLastSeen.bind(Movie)); 
 
 // Series routes
 router.post('/createSeries', Series.saveSeries.bind(Series));
