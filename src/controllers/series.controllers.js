@@ -84,6 +84,30 @@ class Series {
     }
   }
 
+   // Check if a series is in the user's last seen list
+   async isSeriesInLastSeen(req, res) {
+    const { userId, seriesId } = req.params; // Assuming userId and seriesId are passed as URL parameters
+
+    try {
+      const user = await User.findById(userId).populate("lastSeenSeries");
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const seriesInLastSeen = user.lastSeenSeries.some(series => series._id.toString() === seriesId);
+
+      if (!seriesInLastSeen) {
+        return res.status(404).json({ message: "Series not found in last seen list" });
+      }
+
+      res.status(200).json({ message: "Series is in last seen list" });
+    } catch (error) {
+      console.error("Error checking series in last seen list:", error);
+      res.status(500).json({ message: "Error checking series in last seen list", error: error.message });
+    }
+  }
+
   // Remove a series from the user's watchlist
   async removeFromWatchlist(req, res) {
     const { userId, seriesId } = req.body;

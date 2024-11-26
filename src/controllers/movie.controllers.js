@@ -128,7 +128,29 @@ async removeFromWatchlist(req, res) {
   }
 }
 
-  
+   // Check if a movie is in the user's last seen list
+   async isMovieInLastSeen(req, res) {
+    const { userId, movieId } = req.params; // Assuming userId and movieId are passed as URL parameters
+
+    try {
+      const user = await User.findById(userId).populate("lastSeenMovies");
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const movieInLastSeen = user.lastSeenMovies.some(movie => movie._id.toString() === movieId);
+
+      if (!movieInLastSeen) {
+        return res.status(404).json({ message: "Movie not found in last seen list" });
+      }
+
+      res.status(200).json({ message: "Movie is in last seen list" });
+    } catch (error) {
+      console.error("Error checking movie in last seen list:", error);
+      res.status(500).json({ message: "Error checking movie in last seen list", error: error.message });
+    }
+  }
 
   // Get a single movie by ID
   async saveOurMovies(req, res) {
