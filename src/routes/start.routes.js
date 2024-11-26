@@ -39,7 +39,7 @@ router.get('/comedyMoviesByRating', Movie.getComedyMoviesByRating.bind(Movie));
 router.get('/animatedMoviesByRating', Movie.getAnimatedMoviesByRating.bind(Movie)); 
 router.get('/horrorMoviesByRating', Movie.getHorrorMoviesByRating.bind(Movie));
 router.get('/getMovieByIdAndTitle/:movieId/:title', Movie.getMovieByIdAndTitle.bind(Movie));
-router.post('/updateLastSeen/:movieId', Movie.updateLastSeen.bind(Movie)); 
+router.post('/updateLastSeen', Movie.updateLastSeen.bind(Movie)); 
 router.delete('/removeFromWatchlist', Movie.removeFromWatchlist.bind(Movie)); 
 
 // Series routes
@@ -55,7 +55,7 @@ router.get('/animationSeries', Series.getAnimationSeries.bind(Series));
 router.get('/dramaSeries', Series.getDramaSeries.bind(Series));
 router.get('/comedySeries', Series.getComedySeries.bind(Series));
 router.get('/getSeriesByIdAndTitle/:seriesId/:title', Series.getSeriesByIdAndTitle.bind(Series));
-router.post('/updateLastSeenSeries/:seriesId', Series.updateLastSeen.bind(Series)); 
+router.post('/updateLastSeenSeries', Series.updateLastSeen.bind(Series)); 
 router.delete('/removeFromWatchlistSeries', Series.removeFromWatchlist.bind(Series)); 
 
 
