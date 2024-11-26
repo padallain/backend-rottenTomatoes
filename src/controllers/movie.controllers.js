@@ -77,6 +77,57 @@ class Movies {
     res.status(500).json({ message: "Error fetching movie", error: error.message });
   }
 }
+
+// Update lastSeen to the current date and time
+async updateLastSeen(req, res) {
+  const { movieId } = req.params; // Assuming movieId is passed as a URL parameter
+
+  try {
+    const movie = await Movie.findByIdAndUpdate(
+      movieId,
+      { lastSeen: new Date() },
+      { new: true } // Return the updated document
+    );
+
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.status(200).json({ message: "Last seen updated successfully", movie });
+  } catch (error) {
+    console.error("Error updating last seen:", error);
+    res.status(500).json({ message: "Error updating last seen", error: error.message });
+  }
+}
+
+
+// Remove a movie from the user's watchlist
+async removeFromWatchlist(req, res) {
+  const { userId, movieId } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const movieIndex = user.watchlist.findIndex(movie => movie.toString() === movieId);
+
+    if (movieIndex === -1) {
+      return res.status(404).json({ message: "Movie not found in watchlist" });
+    }
+
+    user.watchlist.splice(movieIndex, 1);
+    await user.save();
+
+    res.status(200).json({ message: "Movie removed from watchlist", watchlist: user.watchlist });
+  } catch (error) {
+    console.error("Error removing movie from watchlist:", error);
+    res.status(500).json({ message: "Error removing movie from watchlist", error: error.message });
+  }
+}
+
   
 
   // Get a single movie by ID
