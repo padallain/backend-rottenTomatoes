@@ -78,6 +78,24 @@ class Movies {
   }
 }
 
+ // Get a single movie by _id
+ async getMovieById(req, res) {
+  const { id } = req.params; // Assuming _id is passed as a URL parameter
+
+  try {
+    const movie = await Movie.findById(id);
+
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.status(200).json(movie);
+  } catch (error) {
+    console.error("Error fetching movie:", error);
+    res.status(500).json({ message: "Error fetching movie", error: error.message });
+  }
+}
+
 // Update lastSeen to the current date and time for a movie in the user's last seen list
   async updateLastSeen(req, res) {
     const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
