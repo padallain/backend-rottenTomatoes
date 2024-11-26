@@ -55,6 +55,8 @@ router.get('/animationSeries', Series.getAnimationSeries.bind(Series));
 router.get('/dramaSeries', Series.getDramaSeries.bind(Series));
 router.get('/comedySeries', Series.getComedySeries.bind(Series));
 router.get('/getSeriesByIdAndTitle/:seriesId/:title', Series.getSeriesByIdAndTitle.bind(Series));
+router.put('/updateLastSeenSeries/:seriesId', Series.updateLastSeen.bind(Series)); 
+router.delete('/removeFromWatchlistSeries', Series.removeFromWatchlist.bind(Series)); 
 
 
 // Review routes

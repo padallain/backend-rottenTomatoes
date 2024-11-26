@@ -62,6 +62,55 @@ class Series {
     }
   }
 
+   // Update lastSeen to the current date and time for a series
+   async updateLastSeen(req, res) {
+    const { seriesId } = req.params; // Assuming seriesId is passed as a URL parameter
+
+    try {
+      const series = await SeriesModel.findOneAndUpdate(
+        { seriesId },
+        { lastSeen: new Date() },
+        { new: true } // Return the updated document
+      );
+
+      if (!series) {
+        return res.status(404).json({ message: "Series not found" });
+      }
+
+      res.status(200).json({ message: "Last seen updated successfully", series });
+    } catch (error) {
+      console.error("Error updating last seen:", error);
+      res.status(500).json({ message: "Error updating last seen", error: error.message });
+    }
+  }
+
+  // Remove a series from the user's watchlist
+  async removeFromWatchlist(req, res) {
+    const { userId, seriesId } = req.body;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const seriesIndex = user.watchlistSeries.findIndex(series => series.toString() === seriesId);
+
+      if (seriesIndex === -1) {
+        return res.status(404).json({ message: "Series not found in watchlist" });
+      }
+
+      user.watchlistSeries.splice(seriesIndex, 1);
+      await user.save();
+
+      res.status(200).json({ message: "Series removed from watchlist", watchlistSeries: user.watchlistSeries });
+    } catch (error) {
+      console.error("Error removing series from watchlist:", error);
+      res.status(500).json({ message: "Error removing series from watchlist", error: error.message });
+    }
+  }
+
  // Get a single series by seriesId and title
  async getSeriesByIdAndTitle(req, res) {
   const { seriesId, title } = req.params; // Assuming seriesId and title are passed as URL parameters
