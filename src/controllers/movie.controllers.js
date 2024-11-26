@@ -228,7 +228,7 @@ async removeFromWatchlist(req, res) {
     }
   }
 
-  a  // Get user's last seen movies with full movie details
+    // Get user's last seen movies with full movie details
   async getLastSeen(req, res) {
     const { personId } = req.params;
 
