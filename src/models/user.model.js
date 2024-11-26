@@ -22,20 +22,44 @@ const userSchema = new mongoose.Schema({
     type: Date, 
   },
   watchlist: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Movie'
+    movie: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Movie'
+    },
+    addedAt: {
+      type: Date,
+      default: Date.now
+    }
   }],
   lastSeenMovies: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Movie'
+    movie: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Movie'
+    },
+    seenAt: {
+      type: Date,
+      default: Date.now
+    }
   }],
   watchlistSeries: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Series'
+    series: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Series'
+    },
+    addedAt: {
+      type: Date,
+      default: Date.now
+    }
   }],
   lastSeenSeries: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Series'
+    series: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Series'
+    },
+    seenAt: {
+      type: Date,
+      default: Date.now
+    }
   }],
   movieLastSeen: {
     type: Date, 
