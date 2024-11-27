@@ -44,23 +44,22 @@ class ReviewController {
     }
   }
 
-  // Get a single review by movie
-  async getReviewMovie(req,res){
-    try{
-      const {movieId} = req.params
-      const reviews = await Review.find({ movieId }).populate('author').populate('movie');
+   // Get reviews by movie
+   async getReviewsByMovie(req, res) {
+    const { movieId } = req.params;
 
-      if (!reviews) {
-        return res.status(404).json({ message: 'Review not found' });
+    try {
+      const reviews = await Review.find({ movie: movieId }).populate('author').populate('movie');
+
+      if (!reviews || reviews.length === 0) {
+        return res.status(404).json({ message: 'No reviews found for this movie' });
       }
 
       res.status(200).json(reviews);
     } catch (err) {
-      console.error('Error fetching review:', err);
-      res.status(500).json({ message: 'Error fetching review' });
+      console.error('Error fetching reviews by movie:', err);
+      res.status(500).json({ message: 'Error fetching reviews by movie', error: err.message });
     }
-
-
   }
   
 
