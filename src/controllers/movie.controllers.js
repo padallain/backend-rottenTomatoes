@@ -308,6 +308,36 @@ class Movies {
     }
   }
 
+      // Search for movies and TV shows
+      async searchMulti(req, res) {
+        const { query } = req.query; // Get the query parameter from the request
+    
+        if (!query) {
+          return res.status(400).json({ message: "Query parameter is required" });
+        }
+    
+        const url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=1`;
+        const options = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMDk4ODMyOC4xODI2MDA1LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.teR3vdfItSFXOHQsLQAdjiG0cos3Owbtf2cjyvKjTDI'
+          }
+        };
+    
+        try {
+          const response = await fetch(url, options);
+          const data = await response.json();
+          res.status(200).json(data);
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+          res.status(500).json({
+            message: "Error fetching search results",
+            error: error.message,
+          });
+        }
+      }
+
   // Get trending movies
   async getTrendingMovies(req, res) {
     const url = "https://api.themoviedb.org/3/trending/all/day?language=en-US";

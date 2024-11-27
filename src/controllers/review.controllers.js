@@ -118,11 +118,11 @@ class ReviewController {
   async updateReview(req, res) {
     try {
       const { reviewId } = req.params;
-      const { content, author, movie } = req.body;
+      const { content, author, movie, rating } = req.body;
 
       const updatedReview = await Review.findByIdAndUpdate(
         reviewId,
-        { content, author, movie },
+        { content, author, movie, rating },
         { new: true } // Return the updated document
       );
 
