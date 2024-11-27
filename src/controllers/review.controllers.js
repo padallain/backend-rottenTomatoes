@@ -62,6 +62,23 @@ class ReviewController {
     }
   }
   
+  // Get reviews by author and movie
+  async getReviewsByAuthorAndMovie(req, res) {
+    const { authorId, movieId } = req.params;
+
+    try {
+      const reviews = await Review.find({ author: authorId, movie: movieId }).populate('author').populate('movie');
+
+      if (!reviews || reviews.length === 0) {
+        return res.status(404).json({ message: 'No reviews found for this author and movie' });
+      }
+
+      res.status(200).json(reviews);
+    } catch (err) {
+      console.error('Error fetching reviews by author and movie:', err);
+      res.status(500).json({ message: 'Error fetching reviews by author and movie', error: err.message });
+    }
+  }
 
   // Get a single review by ID
   async getReviewById(req, res) {
