@@ -1,4 +1,5 @@
 import Review from '../models/review.model.js';
+import Movie from '../models/movie.model.js';
 
 class ReviewController {
   // Create a new review
