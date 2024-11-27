@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import mongoose from "mongoose";
 import Movie from "../models/movie.model.js";
 import User from "../models/user.model.js";
 
@@ -9,11 +10,12 @@ class Movies {
     const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
     const castUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`;
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
-      }
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8",
+      },
     };
 
     try {
@@ -26,12 +28,14 @@ class Movies {
       const castData = await castResponse.json();
 
       // Map cast information and limit to the first 10 members
-      const cast = castData.cast ? castData.cast.slice(0, 10).map(member => ({
-        id: member.id, // Include the id from the API
-        name: member.name,
-        role: member.character,
-        profile_path: member.profile_path // Include the profile_path from the API
-      })) : [];
+      const cast = castData.cast
+        ? castData.cast.slice(0, 10).map((member) => ({
+            id: member.id, // Include the id from the API
+            name: member.name,
+            role: member.character,
+            profile_path: member.profile_path, // Include the profile_path from the API
+          }))
+        : [];
 
       const newMovie = new Movie({
         movieId: movieData.id, // Add movieId here
@@ -42,61 +46,81 @@ class Movies {
         briefDescription: movieData.tagline,
         description: movieData.overview,
         releaseDate: movieData.release_date,
-        genre: movieData.genres ? movieData.genres.map(genre => genre.name) : [],
-        director: movieData.production_companies ? movieData.production_companies.map(company => company.name).join(', ') : '',
-        createdBy: movieData.production_companies ? movieData.production_companies.map(company => company.name).join(', ') : '',
+        genre: movieData.genres
+          ? movieData.genres.map((genre) => genre.name)
+          : [],
+        director: movieData.production_companies
+          ? movieData.production_companies
+              .map((company) => company.name)
+              .join(", ")
+          : "",
+        createdBy: movieData.production_companies
+          ? movieData.production_companies
+              .map((company) => company.name)
+              .join(", ")
+          : "",
         cast: cast,
         ratings: movieData.vote_average,
-        categories: movieData.genres ? movieData.genres.map(genre => genre.name) : [],
+        categories: movieData.genres
+          ? movieData.genres.map((genre) => genre.name)
+          : [],
         budget: movieData.budget,
         originalLanguage: movieData.original_language,
       });
 
       const savedMovie = await newMovie.save();
-      res.status(201).json({ message: "Movie created successfully", movie: savedMovie });
+      res
+        .status(201)
+        .json({ message: "Movie created successfully", movie: savedMovie });
     } catch (error) {
       console.error("Error creating movie:", error);
-      res.status(500).json({ message: "Error creating movie", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Error creating movie", error: error.message });
     }
   }
 
- // Get a single movie by movieId and title
- async getMovieByIdAndTitle(req, res) {
-  const { id, title } = req.params; // Assuming movieId and title are passed as URL parameters
+  // Get a single movie by movieId and title
+  async getMovieByIdAndTitle(req, res) {
+    const { id, title } = req.params; // Assuming movieId and title are passed as URL parameters
 
-  try {
-    const movie = await Movie.findOne({ id, title });
+    try {
+      const movie = await Movie.findOne({ id, title });
 
-    if (!movie) {
-      return res.status(404).json({ message: "Movie not found" });
+      if (!movie) {
+        return res.status(404).json({ message: "Movie not found" });
+      }
+
+      res.status(200).json(movie);
+    } catch (error) {
+      console.error("Error fetching movie:", error);
+      res
+        .status(500)
+        .json({ message: "Error fetching movie", error: error.message });
     }
-
-    res.status(200).json(movie);
-  } catch (error) {
-    console.error("Error fetching movie:", error);
-    res.status(500).json({ message: "Error fetching movie", error: error.message });
   }
-}
 
- // Get a single movie by _id
- async getMovieById(req, res) {
-  const { id } = req.params; // Assuming _id is passed as a URL parameter
+  // Get a single movie by _id
+  async getMovieById(req, res) {
+    const { id } = req.params; // Assuming _id is passed as a URL parameter
 
-  try {
-    const movie = await Movie.findById(id);
+    try {
+      const movie = await Movie.findById(id);
 
-    if (!movie) {
-      return res.status(404).json({ message: "Movie not found" });
+      if (!movie) {
+        return res.status(404).json({ message: "Movie not found" });
+      }
+
+      res.status(200).json(movie);
+    } catch (error) {
+      console.error("Error fetching movie:", error);
+      res
+        .status(500)
+        .json({ message: "Error fetching movie", error: error.message });
     }
-
-    res.status(200).json(movie);
-  } catch (error) {
-    console.error("Error fetching movie:", error);
-    res.status(500).json({ message: "Error fetching movie", error: error.message });
   }
-}
 
-// Update lastSeen to the current date and time for a movie in the user's last seen list
+  // Update lastSeen to the current date and time for a movie in the user's last seen list
   async updateLastSeen(req, res) {
     const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
 
@@ -119,7 +143,9 @@ class Movies {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const lastSeenMovie = user.lastSeenMovies.find(movie => movie.movie.toString() === movieId);
+      const lastSeenMovie = user.lastSeenMovies.find(
+        (movie) => movie.movie.toString() === movieId
+      );
 
       if (lastSeenMovie) {
         lastSeenMovie.seenAt = new Date();
@@ -129,44 +155,60 @@ class Movies {
 
       await user.save();
 
-      res.status(200).json({ message: "Last seen updated successfully", movie, user });
+      res
+        .status(200)
+        .json({ message: "Last seen updated successfully", movie, user });
     } catch (error) {
       console.error("Error updating last seen:", error);
-      res.status(500).json({ message: "Error updating last seen", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Error updating last seen", error: error.message });
     }
   }
 
+  // Remove a movie from the user's watchlist
+  async removeFromWatchlist(req, res) {
+    const { userId, movieId } = req.body;
 
+    try {
+      const user = await User.findById(userId);
 
-// Remove a movie from the user's watchlist
-async removeFromWatchlist(req, res) {
-  const { userId, movieId } = req.body;
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-  try {
-    const user = await User.findById(userId);
+      const movieIndex = user.watchlist.findIndex(
+        (movie) => movie.toString() === movieId
+      );
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      if (movieIndex === -1) {
+        return res
+          .status(404)
+          .json({ message: "Movie not found in watchlist" });
+      }
+
+      user.watchlist.splice(movieIndex, 1);
+      await user.save();
+
+      res
+        .status(200)
+        .json({
+          message: "Movie removed from watchlist",
+          watchlist: user.watchlist,
+        });
+    } catch (error) {
+      console.error("Error removing movie from watchlist:", error);
+      res
+        .status(500)
+        .json({
+          message: "Error removing movie from watchlist",
+          error: error.message,
+        });
     }
-
-    const movieIndex = user.watchlist.findIndex(movie => movie.toString() === movieId);
-
-    if (movieIndex === -1) {
-      return res.status(404).json({ message: "Movie not found in watchlist" });
-    }
-
-    user.watchlist.splice(movieIndex, 1);
-    await user.save();
-
-    res.status(200).json({ message: "Movie removed from watchlist", watchlist: user.watchlist });
-  } catch (error) {
-    console.error("Error removing movie from watchlist:", error);
-    res.status(500).json({ message: "Error removing movie from watchlist", error: error.message });
   }
-}
 
-   // Check if a movie is in the user's last seen list
-   async isMovieInLastSeen(req, res) {
+  // Check if a movie is in the user's last seen list
+  async isMovieInLastSeen(req, res) {
     const { userId, movieId } = req.params; // Assuming userId and movieId are passed as URL parameters
 
     try {
@@ -176,16 +218,25 @@ async removeFromWatchlist(req, res) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const movieInLastSeen = user.lastSeenMovies.some(movie => movie._id.toString() === movieId);
+      const movieInLastSeen = user.lastSeenMovies.some(
+        (movie) => movie._id.toString() === movieId
+      );
 
       if (!movieInLastSeen) {
-        return res.status(404).json({ message: "Movie not found in last seen list" });
+        return res
+          .status(404)
+          .json({ message: "Movie not found in last seen list" });
       }
 
       res.status(200).json({ message: "Movie is in last seen list" });
     } catch (error) {
       console.error("Error checking movie in last seen list:", error);
-      res.status(500).json({ message: "Error checking movie in last seen list", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Error checking movie in last seen list",
+          error: error.message,
+        });
     }
   }
 
@@ -211,54 +262,51 @@ async removeFromWatchlist(req, res) {
 
       await user.save();
 
-      res
-        .status(200)
-        .json({
-          message: "Movie added to last seen movies",
-          lastSeenMovies: user.lastSeenMovies,
-        });
+      res.status(200).json({
+        message: "Movie added to last seen movies",
+        lastSeenMovies: user.lastSeenMovies,
+      });
     } catch (error) {
       console.error("Error adding movie to last seen movies:", error);
+      res.status(500).json({
+        message: "Error adding movie to last seen movies",
+        error: error.message,
+      });
+    }
+  }
+
+  // Get user's last seen movies with full movie details
+  async getLastSeen(req, res) {
+    const { personId } = req.params;
+
+    try {
+      const user = await User.findById(personId).populate({
+        path: "lastSeenMovies.movie",
+        model: "Movie",
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Populate the movie details for each last seen movie
+      const lastSeenMovies = user.lastSeenMovies.map((lastSeen) => ({
+        _id: lastSeen._id,
+        seenAt: lastSeen.seenAt,
+        movie: lastSeen.movie,
+      }));
+
+      res.status(200).json({ lastSeenMovies });
+    } catch (error) {
+      console.error("Error fetching last seen movies:", error);
       res
         .status(500)
         .json({
-          message: "Error adding movie to last seen movies",
+          message: "Error fetching last seen movies",
           error: error.message,
         });
     }
   }
-
-    // Get user's last seen movies with full movie details
-    async getLastSeen(req, res) {
-      const { personId } = req.params;
-  
-      try {
-        const user = await User.findById(personId).populate({
-          path: 'lastSeenMovies.movie',
-          model: 'Movie'
-        });
-  
-        if (!user) {
-          return res.status(404).json({ message: "User not found" });
-        }
-  
-        // Populate the movie details for each last seen movie
-        const lastSeenMovies = await Promise.all(
-          user.lastSeenMovies.map(async (lastSeen) => {
-            const movie = await Movie.findById(lastSeen.movie);
-            return {
-              ...lastSeen.toObject(),
-              movie
-            };
-          })
-        );
-  
-        res.status(200).json({ lastSeenMovies });
-      } catch (error) {
-        console.error("Error fetching last seen movies:", error);
-        res.status(500).json({ message: "Error fetching last seen movies", error: error.message });
-      }
-    }
 
   // Get trending movies
   async getTrendingMovies(req, res) {
@@ -278,18 +326,15 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching trending movies:", error);
-      res
-        .status(500)
-        .json({
-          message: "Error fetching trending movies",
-          error: error.message,
-        });
+      res.status(500).json({
+        message: "Error fetching trending movies",
+        error: error.message,
+      });
     }
   }
 
-
-   // Get trending movies
-   async getTrendingWeekMovies(req, res) {
+  // Get trending movies
+  async getTrendingWeekMovies(req, res) {
     const url = "https://api.themoviedb.org/3/trending/all/week?language=en-US";
     const options = {
       method: "GET",
@@ -306,12 +351,10 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching trending movies:", error);
-      res
-        .status(500)
-        .json({
-          message: "Error fetching trending movies",
-          error: error.message,
-        });
+      res.status(500).json({
+        message: "Error fetching trending movies",
+        error: error.message,
+      });
     }
   }
 
@@ -392,12 +435,10 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching popular movies:", error);
-      res
-        .status(500)
-        .json({
-          message: "Error fetching popular movies",
-          error: error.message,
-        });
+      res.status(500).json({
+        message: "Error fetching popular movies",
+        error: error.message,
+      });
     }
   }
 
@@ -419,18 +460,16 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching top rated movies:", error);
-      res
-        .status(500)
-        .json({
-          message: "Error fetching top rated movies",
-          error: error.message,
-        });
+      res.status(500).json({
+        message: "Error fetching top rated movies",
+        error: error.message,
+      });
     }
   }
-  
-    // Save a movie to the user's watchlist
-    async addToWatchlist(req, res) {
-      const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
+
+  // Save a movie to the user's watchlist
+  async addToWatchlist(req, res) {
+    const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
 
     try {
       const user = await User.findById(userId).populate("watchlist");
@@ -450,84 +489,97 @@ async removeFromWatchlist(req, res) {
 
       await user.save();
 
-      res
-        .status(200)
-        .json({
-          message: "Movie added to watchlist movies",
-          lastSeenMovies: user.watchlist,
-        });
+      res.status(200).json({
+        message: "Movie added to watchlist movies",
+        lastSeenMovies: user.watchlist,
+      });
     } catch (error) {
       console.error("Error adding movie to watch movies:", error);
-      res
-        .status(500)
-        .json({
-          message: "Error adding movie to watch movies",
-          error: error.message,
-        });
+      res.status(500).json({
+        message: "Error adding movie to watch movies",
+        error: error.message,
+      });
     }
-    }
+  }
 
   // Get all watchlist movies for a user
   async getWatchlist(req, res) {
     const { personId } = req.params; // Assuming userId is passed as a URL parameter
 
     try {
-      const user = await User.findById(personId).populate('watchlist');
+      const user = await User.findById(personId).populate("watchlist");
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       res.status(200).json({ watchlist: user.watchlist });
     } catch (error) {
       console.error("Error fetching watchlist:", error);
-      res.status(500).json({ message: "Error fetching watchlist", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Error fetching watchlist", error: error.message });
     }
   }
 
-    async addLastSeen(req, res) {
-      const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
-  
-      try {
-        const user = await User.findById(userId).populate('lastSeenMovies');
-        const movie = await Movie.findById(movieId);
-  
-        if (!user || !movie) {
-          return res.status(404).json({ message: 'User or Movie not found' });
-        }
-  
-        // Add the movie to the user's last seen movies
-        user.lastSeenMovies.push(movie);
-  
-        // Ensure the array does not exceed 15 movies
-        if (user.lastSeenMovies.length > 15) {
-          user.lastSeenMovies.shift(); // Remove the oldest movie
-        }
-  
-        await user.save();
-  
-        res.status(200).json({ message: 'Movie added to last seen movies', lastSeenMovies: user.lastSeenMovies });
-      } catch (error) {
-        console.error("Error adding movie to last seen movies:", error);
-        res.status(500).json({ message: "Error adding movie to last seen movies", error: error.message });
-      }
-    }
+  async addLastSeen(req, res) {
+    const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
 
-    // Get all last seen movies for a user
+    try {
+      const user = await User.findById(userId).populate("lastSeenMovies");
+      const movie = await Movie.findById(movieId);
+
+      if (!user || !movie) {
+        return res.status(404).json({ message: "User or Movie not found" });
+      }
+
+      // Add the movie to the user's last seen movies
+      user.lastSeenMovies.push(movie);
+
+      // Ensure the array does not exceed 15 movies
+      if (user.lastSeenMovies.length > 15) {
+        user.lastSeenMovies.shift(); // Remove the oldest movie
+      }
+
+      await user.save();
+
+      res
+        .status(200)
+        .json({
+          message: "Movie added to last seen movies",
+          lastSeenMovies: user.lastSeenMovies,
+        });
+    } catch (error) {
+      console.error("Error adding movie to last seen movies:", error);
+      res
+        .status(500)
+        .json({
+          message: "Error adding movie to last seen movies",
+          error: error.message,
+        });
+    }
+  }
+
+  // Get all last seen movies for a user
   async getLastSeen(req, res) {
     const { personId } = req.params; // Assuming userId is passed as a URL parameter
 
     try {
-      const user = await User.findById(personId).populate('lastSeenMovies');
+      const user = await User.findById(personId).populate("lastSeenMovies");
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       res.status(200).json({ lastSeenMovies: user.lastSeenMovies });
     } catch (error) {
       console.error("Error fetching last seen movies:", error);
-      res.status(500).json({ message: "Error fetching last seen movies", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Error fetching last seen movies",
+          error: error.message,
+        });
     }
   }
 
@@ -564,13 +616,15 @@ async removeFromWatchlist(req, res) {
   }
 
   async moviesInTheater(req, res) {
-    const url = 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1';
+    const url =
+      "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
-      }
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8",
+      },
     };
 
     try {
@@ -584,18 +638,25 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data.results);
     } catch (error) {
       console.error("Error fetching movies in theaters:", error);
-      res.status(500).json({ message: "Error fetching movies in theaters", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Error fetching movies in theaters",
+          error: error.message,
+        });
     }
   }
 
   async getActionMoviesByRating(req, res) {
-    const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=28';
+    const url =
+      "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=28";
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
-      }
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8",
+      },
     };
 
     try {
@@ -609,18 +670,25 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data.results);
     } catch (error) {
       console.error("Error fetching action movies by rating:", error);
-      res.status(500).json({ message: "Error fetching action movies by rating", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Error fetching action movies by rating",
+          error: error.message,
+        });
     }
   }
 
   async getComedyMoviesByRating(req, res) {
-    const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=35';
+    const url =
+      "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=35";
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
-      }
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8",
+      },
     };
 
     try {
@@ -634,18 +702,25 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data.results);
     } catch (error) {
       console.error("Error fetching comedy movies by rating:", error);
-      res.status(500).json({ message: "Error fetching comedy movies by rating", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Error fetching comedy movies by rating",
+          error: error.message,
+        });
     }
   }
-  
+
   async getAnimatedMoviesByRating(req, res) {
-    const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=16';
+    const url =
+      "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=16";
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
-      }
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8",
+      },
     };
 
     try {
@@ -659,18 +734,25 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data.results);
     } catch (error) {
       console.error("Error fetching animated movies by rating:", error);
-      res.status(500).json({ message: "Error fetching animated movies by rating", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Error fetching animated movies by rating",
+          error: error.message,
+        });
     }
   }
 
   async getHorrorMoviesByRating(req, res) {
-    const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=27';
+    const url =
+      "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=10&with_genres=27";
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
-      }
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8",
+      },
     };
 
     try {
@@ -684,14 +766,14 @@ async removeFromWatchlist(req, res) {
       res.status(200).json(data.results);
     } catch (error) {
       console.error("Error fetching horror movies by rating:", error);
-      res.status(500).json({ message: "Error fetching horror movies by rating", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Error fetching horror movies by rating",
+          error: error.message,
+        });
     }
   }
-
-
-
-
-  
 }
 
 export default new Movies();
