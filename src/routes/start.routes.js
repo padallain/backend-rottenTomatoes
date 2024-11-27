@@ -43,6 +43,7 @@ router.post('/updateLastSeen', Movie.updateLastSeen.bind(Movie));
 router.delete('/removeFromWatchlist', Movie.removeFromWatchlist.bind(Movie)); 
 router.get('/isMovieInLastSeen/:userId/:movieId', Movie.isMovieInLastSeen.bind(Movie)); 
 router.get('/getMovieById/:id', Movie.getMovieById.bind(Movie)); 
+router.get('/searchMulti', Movie.searchMulti.bind(Movie));
 
 // Series routes
 router.post('/createSeries', Series.saveSeries.bind(Series));
