@@ -331,6 +331,7 @@ class Movies {
     
           // Filter the required fields
           const filteredResults = data.results.map(item => ({
+            movieId: item.id,
             name: item.name || item.title,
             overview: item.overview,
             poster_path: item.poster_path,
