@@ -3,16 +3,29 @@ import Review from '../models/review.model.js';
 class ReviewController {
   // Create a new review
   async createReview(req, res) {
-    const { content, author, movie, rating} = req.body;
+    const { content, author, movie, rating } = req.body;
 
     if (!content || !author || !movie || !rating) {
-      return res.status(400).json({ message: 'Content, author, and movie are required' });
+      return res.status(400).json({ message: 'Content, author, movie, and rating are required' });
     }
 
     try {
+      // Create a new review
       const newReview = new Review({ content, author, movie, rating });
       await newReview.save();
-      res.status(201).json({ message: 'Review created successfully', newReview });
+
+      // Update the movie with the new review
+      const updatedMovie = await Movie.findByIdAndUpdate(
+        movie,
+        { $push: { reviews: newReview._id } },
+        { new: true }
+      ).populate('reviews');
+
+      if (!updatedMovie) {
+        return res.status(404).json({ message: 'Movie not found' });
+      }
+
+      res.status(201).json({ message: 'Review created successfully', newReview, updatedMovie });
     } catch (err) {
       console.error('Error creating review:', err);
       res.status(500).json({ message: 'Error creating review' });
@@ -31,7 +44,6 @@ class ReviewController {
   }
 
   // Get a single review by movie
-
   async getReviewMovie(req,res){
     try{
       const {movieId} = req.params
