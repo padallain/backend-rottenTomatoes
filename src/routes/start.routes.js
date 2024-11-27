@@ -66,7 +66,7 @@ router.get('/isSeriesInLastSeen/:userId/:seriesId', Series.isSeriesInLastSeen.bi
 router.post('/createReview', ReviewController.createReview.bind(ReviewController));
 router.get('/reviews', ReviewController.getReviews.bind(ReviewController));
 router.get('/review/:reviewId', ReviewController.getReviewById.bind(ReviewController));
-router.get('/reviews/movie/:movieId', ReviewController.getReviewMovie.bind(ReviewController));
+router.get('/reviews/movie/:movieId', ReviewController. getReviewsByMovie.bind(ReviewController));
 router.get('/reviews/author/:authorId', ReviewController.getReviewAuthor.bind(ReviewController));
 router.put('/review/:reviewId', ReviewController.updateReview.bind(ReviewController));
 router.delete('/review/:reviewId', ReviewController.deleteReview.bind(ReviewController));
