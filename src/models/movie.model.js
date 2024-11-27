@@ -63,30 +63,20 @@ const movieSchema = new Schema(
       max: 10,
       default: 0,
     },
+    myScore: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0,
+    },
     categories: {
       type: [String],
       required: true,
     },
     reviews: [
       {
-        reviewer: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true,
-        },
-        comment: {
-          type: String,
-          trim: true,
-        },
-        rating: {
-          type: Number,
-          min: 0,
-          max: 10,
-        },
-        date: {
-          type: Date,
-          default: Date.now,
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
       },
     ],
     budget: {

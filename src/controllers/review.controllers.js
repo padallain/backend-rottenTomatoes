@@ -28,7 +28,7 @@ class ReviewController {
       res.status(201).json({ message: 'Review created successfully', newReview, updatedMovie });
     } catch (err) {
       console.error('Error creating review:', err);
-      res.status(500).json({ message: 'Error creating review' });
+      res.status(500).json({ message: 'Error creating review', error: err.message });
     }
   }
 
