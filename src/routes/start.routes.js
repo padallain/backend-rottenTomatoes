@@ -73,6 +73,6 @@ router.get('/reviews/series/:seriesId', ReviewController.getReviews.bind(ReviewC
 router.get('/reviews/author/:authorId', ReviewController.getReviewAuthor.bind(ReviewController));
 router.put('/review/:reviewId', ReviewController.updateReview.bind(ReviewController));
 router.delete('/review/:reviewId', ReviewController.deleteReview.bind(ReviewController));
-router.get('/reviews/author/:authorId/movie/:movieId', ReviewController.getReviewsByAuthorAndMovie.bind(ReviewController)); 
-  
+router.get('/reviews/author/:authorId/movie/:movieId', ReviewController.getReviewsByAuthorAndMovie.bind(ReviewController));
+router.get('/reviews/author/:authorId/series/:seriesId', ReviewController.getReviewsByAuthorAndItem.bind(ReviewController)); 
 export default router;
