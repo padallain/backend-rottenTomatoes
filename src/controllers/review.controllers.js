@@ -60,10 +60,13 @@ class ReviewController {
     const { movieId } = req.params;
 
     try {
-      const reviews = await Review.find({ movie: movieId }).populate('author').populate('movie').populate('series');;
+      const reviews = await Review.find({ movie: movieId }).populate('author').populate('movie')
 
       if (!reviews || reviews.length === 0) {
-        return res.status(404).json({ message: 'No reviews found for this movie' });
+        const reviews = await Review.find({ series: movieId }).populate('author').populate('movie')
+        res.status(200).json(reviews);
+      }else{
+        return res.status(404).json({ message: 'No reviews found for this author and movie' });
       }
 
       res.status(200).json(reviews);
