@@ -80,45 +80,45 @@ class Series {
     }
   }
 
-   // Update lastSeen to the current date and time for a movie in the user's last seen list
-  async updateLastSeen(req, res) {
-    const { userId, movieId } = req.body; // Assuming userId and movieId are passed in the request body
-
-    try {
-      // Update the lastSeen field in the Movie document
-      const movie = await Movie.findByIdAndUpdate(
-        movieId,
-        { lastSeen: new Date() },
-        { new: true } // Return the updated document
-      );
-
-      if (!movie) {
-        return res.status(404).json({ message: "Movie not found" });
+    // Update lastSeen to the current date and time for a series in the user's last seen list
+    async updateLastSeen(req, res) {
+      const { userId, seriesId } = req.body; // Assuming userId and seriesId are passed in the request body
+  
+      try {
+        // Update the lastSeen field in the Series document
+        const series = await SeriesModel.findByIdAndUpdate(
+          seriesId,
+          { lastSeen: new Date() },
+          { new: true } // Return the updated document
+        );
+  
+        if (!series) {
+          return res.status(404).json({ message: "Series not found" });
+        }
+  
+        // Update the lastSeen field in the User document
+        const user = await User.findById(userId);
+  
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+  
+        const lastSeenSeries = user.lastSeenSeries.find(series => series.series.toString() === seriesId);
+  
+        if (lastSeenSeries) {
+          lastSeenSeries.seenAt = new Date();
+        } else {
+          user.lastSeenSeries.push({ series: seriesId, seenAt: new Date() });
+        }
+  
+        await user.save();
+  
+        res.status(200).json({ message: "Last seen updated successfully", series, user });
+      } catch (error) {
+        console.error("Error updating last seen:", error);
+        res.status(500).json({ message: "Error updating last seen", error: error.message });
       }
-
-      // Update the lastSeen field in the User document
-      const user = await User.findById(userId);
-
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      const lastSeenMovie = user.lastSeenMovies.find(movie => movie.movie.toString() === movieId);
-
-      if (lastSeenMovie) {
-        lastSeenMovie.seenAt = new Date();
-      } else {
-        user.lastSeenMovies.push({ movie: movieId, seenAt: new Date() });
-      }
-
-      await user.save();
-
-      res.status(200).json({ message: "Last seen updated successfully", movie, user });
-    } catch (error) {
-      console.error("Error updating last seen:", error);
-      res.status(500).json({ message: "Error updating last seen", error: error.message });
     }
-  }
 
 
    // Check if a series is in the user's last seen list
