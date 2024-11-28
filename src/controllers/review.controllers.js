@@ -4,29 +4,43 @@ import Movie from '../models/movie.model.js';
 class ReviewController {
   // Create a new review
   async createReview(req, res) {
-    const { content, author, movie, rating } = req.body;
+    const { content, author, movie, series, rating } = req.body;
 
-    if (!content || !author || !movie || !rating) {
-      return res.status(400).json({ message: 'Content, author, movie, and rating are required' });
+    if (!content || !author || (!movie && !series) || !rating) {
+      return res.status(400).json({ message: 'Content, author, movie or series, and rating are required' });
     }
 
     try {
       // Create a new review
-      const newReview = new Review({ content, author, movie, rating });
+      const newReview = new Review({ content, author, movie, series, rating });
       await newReview.save();
 
-      // Update the movie with the new review
-      const updatedMovie = await Movie.findByIdAndUpdate(
-        movie,
-        { $push: { reviews: newReview._id } },
-        { new: true }
-      ).populate('reviews');
+      let updatedItem;
+      if (movie) {
+        // Update the movie with the new review
+        updatedItem = await Movie.findByIdAndUpdate(
+          movie,
+          { $push: { reviews: newReview._id } },
+          { new: true }
+        ).populate('reviews');
 
-      if (!updatedMovie) {
-        return res.status(404).json({ message: 'Movie not found' });
+        if (!updatedItem) {
+          return res.status(404).json({ message: 'Movie not found' });
+        }
+      } else if (series) {
+        // Update the series with the new review
+        updatedItem = await Series.findByIdAndUpdate(
+          series,
+          { $push: { reviews: newReview._id } },
+          { new: true }
+        ).populate('reviews');
+
+        if (!updatedItem) {
+          return res.status(404).json({ message: 'Series not found' });
+        }
       }
 
-      res.status(201).json({ message: 'Review created successfully', newReview, updatedMovie });
+      res.status(201).json({ message: 'Review created successfully', newReview, updatedItem });
     } catch (err) {
       console.error('Error creating review:', err);
       res.status(500).json({ message: 'Error creating review', error: err.message });
@@ -49,7 +63,7 @@ class ReviewController {
     const { movieId } = req.params;
 
     try {
-      const reviews = await Review.find({ movie: movieId }).populate('author').populate('movie');
+      const reviews = await Review.find({ movie: movieId }).populate('author').populate('movie').populate('series');;
 
       if (!reviews || reviews.length === 0) {
         return res.status(404).json({ message: 'No reviews found for this movie' });
@@ -67,7 +81,7 @@ class ReviewController {
     const { authorId, movieId } = req.params;
 
     try {
-      const reviews = await Review.find({ author: authorId, movie: movieId }).populate('author').populate('movie');
+      const reviews = await Review.find({ author: authorId, movie: movieId }).populate('author').populate('movie').populate('series');
 
       if (!reviews || reviews.length === 0) {
         return res.status(404).json({ message: 'No reviews found for this author and movie' });
