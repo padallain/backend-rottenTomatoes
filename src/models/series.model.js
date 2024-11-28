@@ -47,6 +47,7 @@ const seriesSchema = new mongoose.Schema({
   ratings: {
     type: Number
   },
+
   categories: {
     type: [String]
   },
