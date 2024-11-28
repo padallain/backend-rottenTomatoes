@@ -19,6 +19,10 @@ const reviewSchema = new Schema(
       ref: 'Movie',                         // Relate to the Movie model
       required: true,                      // The movie is required
     },
+    series: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Series',
+    },
     rating: {
       type: Number,
       required: true, // The rating of the review is required

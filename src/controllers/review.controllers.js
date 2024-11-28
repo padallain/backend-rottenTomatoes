@@ -102,29 +102,30 @@ class ReviewController {
     }
   }
   
-  async getReviewsByAuthorAndItem(req, res) {
-    const { authorId, movieId, seriesId } = req.params;
-  
-    try {
-      let reviews;
-      if (movieId) {
-        reviews = await Review.find({ author: authorId, movie: movieId }).populate('author').populate('movie');
-      } else if (seriesId) {
-        reviews = await Review.find({ author: authorId, series: seriesId }).populate('author').populate('series');
-      } else {
-        return res.status(400).json({ message: 'Movie ID or Series ID is required' });
-      }
-  
-      if (!reviews || reviews.length === 0) {
-        return res.status(404).json({ message: 'No reviews found for this author and item' });
-      }
-  
-      res.status(200).json(reviews);
-    } catch (err) {
-      console.error('Error fetching reviews by author and item:', err);
-      res.status(500).json({ message: 'Error fetching reviews by author and item', error: err.message });
+ // Get reviews by author and movie or series
+ async getReviewsByAuthorAndItem(req, res) {
+  const { authorId, movieId, seriesId } = req.params;
+
+  try {
+    let reviews;
+    if (movieId) {
+      reviews = await Review.find({ author: authorId, movie: movieId }).populate('author').populate('movie');
+    } else if (seriesId) {
+      reviews = await Review.find({ author: authorId, series: seriesId }).populate('author').populate('series');
+    } else {
+      return res.status(400).json({ message: 'Movie ID or Series ID is required' });
     }
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: 'No reviews found for this author and item' });
+    }
+
+    res.status(200).json(reviews);
+  } catch (err) {
+    console.error('Error fetching reviews by author and item:', err);
+    res.status(500).json({ message: 'Error fetching reviews by author and item', error: err.message });
   }
+}
 
   // Get a single review by ID
   async getReviewById(req, res) {
