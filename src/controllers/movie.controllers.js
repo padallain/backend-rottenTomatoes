@@ -144,7 +144,7 @@ class Movies {
       }
 
       const lastSeenMovie = user.lastSeenMovies.find(
-        (movie) => movie.movie.toString() === movieId
+        (movie) => movie.movie && movie.movie.toString() === movieId
       );
 
       if (lastSeenMovie) {
