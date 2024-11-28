@@ -80,7 +80,7 @@ class Series {
     }
   }
 
- // Update lastSeen to the current date and time for a series in the user's last seen list
+ /// Update lastSeen to the current date and time for a series in the user's last seen list
  async updateLastSeen(req, res) {
   const { userId, seriesId } = req.body; // Assuming userId and seriesId are passed in the request body
 
@@ -104,7 +104,7 @@ class Series {
     }
 
     const lastSeenSeries = user.lastSeenSeries.find(
-      (item) => item.series.toString() === seriesId
+      (item) => item.series && item.series.toString() === seriesId
     );
 
     if (lastSeenSeries) {
