@@ -58,6 +58,7 @@ class ReviewController {
 
   async getReviews(req, res) {
     const { movieId, seriesId } = req.params;
+    console.log(movieId, seriesId);
 
     try {
       let reviews;
