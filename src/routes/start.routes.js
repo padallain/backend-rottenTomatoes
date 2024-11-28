@@ -61,6 +61,7 @@ router.get('/getSeriesByIdAndTitle/:seriesId/:title', Series.getSeriesByIdAndTit
 router.post('/updateLastSeenSeries', Series.updateLastSeen.bind(Series)); 
 router.delete('/removeFromWatchlistSeries', Series.removeFromWatchlist.bind(Series)); 
 router.get('/isSeriesInLastSeen/:userId/:seriesId', Series.isSeriesInLastSeen.bind(Series)); 
+router.get('/getSeriesById/:id', Series.getSeriesById.bind(Series));
 
 
 // Review routes
