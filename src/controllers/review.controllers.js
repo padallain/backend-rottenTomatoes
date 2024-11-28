@@ -1,5 +1,6 @@
 import Review from '../models/review.model.js';
 import Movie from '../models/movie.model.js';
+import Series from '../models/series.model.js';
 
 class ReviewController {
   // Create a new review
@@ -45,13 +46,37 @@ class ReviewController {
   }
 
   // Get all reviews
+  // async getReviews(req, res) {
+  //   try {
+  //     const reviews = await Review.find().populate('author').populate('movie');
+  //     res.status(200).json(reviews);
+  //   } catch (err) {
+  //     console.error('Error fetching reviews:', err);
+  //     res.status(500).json({ message: 'Error fetching reviews' });
+  //   }
+  // }
+
   async getReviews(req, res) {
+    const { movieId, seriesId } = req.params;
+
     try {
-      const reviews = await Review.find().populate('author').populate('movie');
+      let reviews;
+      if (movieId) {
+        reviews = await Review.find({ movie: movieId }).populate('author').populate('movie');
+      } else if (seriesId) {
+        reviews = await Review.find({ series: seriesId }).populate('author').populate('series');
+      } else {
+        return res.status(400).json({ message: 'Movie ID or Series ID is required' });
+      }
+
+      if (!reviews || reviews.length === 0) {
+        return res.status(404).json({ message: 'No reviews found for this movie or series' });
+      }
+
       res.status(200).json(reviews);
     } catch (err) {
       console.error('Error fetching reviews:', err);
-      res.status(500).json({ message: 'Error fetching reviews' });
+      res.status(500).json({ message: 'Error fetching reviews', error: err.message });
     }
   }
 
