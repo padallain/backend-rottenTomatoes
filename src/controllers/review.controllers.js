@@ -16,7 +16,7 @@ class ReviewController {
       await newReview.save();
 
       let updatedItem;
-      if (movie) {
+      if (movie ) {
         // Update the movie with the new review
         updatedItem = await Movie.findByIdAndUpdate(
           movie,
@@ -24,9 +24,6 @@ class ReviewController {
           { new: true }
         ).populate('reviews');
 
-        if (!updatedItem) {
-          return res.status(404).json({ message: 'Movie not found' });
-        }
       } else if (series) {
         // Update the series with the new review
         updatedItem = await Series.findByIdAndUpdate(
