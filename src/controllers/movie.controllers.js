@@ -545,6 +545,35 @@ class Movies {
     }
   }
 
+  // Remove a movie from the user's watchlist
+  async removeFromWatchlist(req, res) {
+    const { userId, movieId } = req.body;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const movieIndex = user.watchlist.findIndex(
+        (movie) => movie.toString() === movieId
+      );
+
+      if (movieIndex === -1) {
+        return res.status(404).json({ message: "Movie not found in watchlist" });
+      }
+
+      user.watchlist.splice(movieIndex, 1);
+      await user.save();
+
+      res.status(200).json({ message: "Movie removed from watchlist", watchlist: user.watchlist });
+    } catch (error) {
+      console.error("Error removing movie from watchlist:", error);
+      res.status(500).json({ message: "Error removing movie from watchlist", error: error.message });
+    }
+  }
+
   // Get all watchlist movies for a user
   async getWatchlist(req, res) {
     const { personId } = req.params; // Assuming userId is passed as a URL parameter
