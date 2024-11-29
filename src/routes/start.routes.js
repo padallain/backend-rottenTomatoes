@@ -65,6 +65,7 @@ router.delete('/removeFromWatchlistSeries', Series.removeFromWatchlist.bind(Seri
 router.get('/isSeriesInLastSeen/:userId/:seriesId', Series.isSeriesInLastSeen.bind(Series)); 
 router.get('/getSeriesById/:id', Series.getSeriesById.bind(Series));
 router.get('/getUpcomingPopularSeries', Series.getUpcomingPopularSeries.bind(Series));
+router.delete('/removeFromWatchlistSeries', Series.removeFromWatchlist.bind(Series)); // New route
 
 
 // Review routes

@@ -160,6 +160,35 @@ async getUpcomingPopularSeries(req, res) {
   }
 }
 
+async removeFromWatchlist(req, res) {
+  const { userId, seriesId } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const seriesIndex = user.watchlistSeries.findIndex(
+      (series) => series.toString() === seriesId
+    );
+
+    if (seriesIndex === -1) {
+      return res.status(404).json({ message: "Series not found in watchlist" });
+    }
+
+    user.watchlistSeries.splice(seriesIndex, 1);
+    await user.save();
+
+    res.status(200).json({ message: "Series removed from watchlist", watchlistSeries: user.watchlistSeries });
+  } catch (error) {
+    console.error("Error removing series from watchlist:", error);
+    res.status(500).json({ message: "Error removing series from watchlist", error: error.message });
+  }
+}
+
+
    // Check if a series is in the user's last seen list
    async isSeriesInLastSeen(req, res) {
     const { userId, seriesId } = req.params; // Assuming userId and seriesId are passed as URL parameters
