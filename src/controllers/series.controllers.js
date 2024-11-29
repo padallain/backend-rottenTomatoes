@@ -123,6 +123,7 @@ class Series {
 }
 
 
+
    // Check if a series is in the user's last seen list
    async isSeriesInLastSeen(req, res) {
     const { userId, seriesId } = req.params; // Assuming userId and seriesId are passed as URL parameters

@@ -45,6 +45,7 @@ router.get('/isMovieInLastSeen/:userId/:movieId', Movie.isMovieInLastSeen.bind(M
 router.get('/getMovieById/:id', Movie.getMovieById.bind(Movie)); 
 router.get('/searchMulti', Movie.searchMulti.bind(Movie));
 router.delete('/removeFromWatchlist', Movie.removeFromWatchlist.bind(Movie));
+router.get('/discoverMovies', Movie.discoverMovies.bind(Movie))
 
 // Series routes
 router.post('/createSeries', Series.saveSeries.bind(Series));
@@ -63,6 +64,7 @@ router.post('/updateLastSeenSeries', Series.updateLastSeen.bind(Series));
 router.delete('/removeFromWatchlistSeries', Series.removeFromWatchlist.bind(Series)); 
 router.get('/isSeriesInLastSeen/:userId/:seriesId', Series.isSeriesInLastSeen.bind(Series)); 
 router.get('/getSeriesById/:id', Series.getSeriesById.bind(Series));
+router.get('/getUpcomingPopularSeries', Series.getUpcomingPopularSeries.bind(Series));
 
 
 // Review routes
