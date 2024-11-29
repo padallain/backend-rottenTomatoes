@@ -122,7 +122,43 @@ class Series {
   }
 }
 
+async getUpcomingPopularSeries(req, res) {
+  const url = 'https://api.themoviedb.org/3/discover/tv?first_air_date.gte=2024-01-01&include_adult=false&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc';
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNDZhMWU5Y2NkMTZmZjliYmRmZTZiNmVmNjhiYzAxYyIsIm5iZiI6MTczMTAwOTM2MS41MDY2MjY4LCJzdWIiOiI2NzI2ZWRmODU1NDA4M2E1NmEwZDVkNGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.0RZFQ_u-V1-I9RU-Kk6Qt-HB2v-MASBmHryZu9pLLD8'
+    }
+  };
 
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+      return res.status(404).json({ message: "No upcoming popular TV series found" });
+    }
+
+    // Filter the required fields
+    const filteredResults = data.results.map(item => ({
+      name: item.name,
+      overview: item.overview,
+      poster_path: item.poster_path,
+      media_type: item.media_type,
+      popularity: item.popularity,
+      first_air_date: item.first_air_date,
+    }));
+
+    res.status(200).json(filteredResults);
+  } catch (error) {
+    console.error("Error fetching upcoming popular TV series:", error);
+    res.status(500).json({
+      message: "Error fetching upcoming popular TV series",
+      error: error.message,
+    });
+  }
+}
 
    // Check if a series is in the user's last seen list
    async isSeriesInLastSeen(req, res) {
