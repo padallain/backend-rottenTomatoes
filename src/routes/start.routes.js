@@ -19,6 +19,7 @@ router.post('/resetPassword', resetPassword);
 router.post('/checkReset', checkResetToken);
 router.post('/newPassword', savePassword);
 router.delete('/deleteUser', eraseAccount);
+router.get('/getUserInfo/:userId', getUserInfoById); 
 
 // Movie routes
 router.get('/trendingMovies', Movie.getTrendingMovies.bind(Movie)); 

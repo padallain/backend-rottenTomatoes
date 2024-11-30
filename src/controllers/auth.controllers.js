@@ -231,6 +231,24 @@ export const savePassword = async (req, res) => {
   }
 };
 
+// Get email and username by user ID
+export const getUserInfoById = async (req, res) => {
+  const { userId } = req.params; // Assuming userId is passed as a URL parameter
+
+  try {
+    const user = await User.findById(userId, 'email_user username'); // Select only email_user and username fields
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ email: user.email_user, username: user.username });
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    res.status(500).json({ message: "Error fetching user info", error: error.message });
+  }
+};
+
 
 export const eraseAccount = async (req, res) => {
   const { username } = req.body;
