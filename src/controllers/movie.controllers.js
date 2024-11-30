@@ -338,6 +338,7 @@ class Movies {
             media_type: item.media_type,
             popularity: item.popularity,
             first_air_date: item.first_air_date || item.release_date,
+            gen_id:item.genre_ids,
             vote_average: item.vote_average,
           }));
     
